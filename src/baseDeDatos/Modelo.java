@@ -31,12 +31,16 @@ public class Modelo extends Database {
 		String email=null;
 		String loginA=null;
 		
-		String sql = "SELECT email,nombre,apellidos,login FROM Alumno WHERE (login='?' OR email='?') AND passwd = PASSWORD('?')"; 
+		String sql = "SELECT email,nombre,apellidos,login FROM Alumno WHERE (login=? OR email=?) AND passwd = PASSWORD(?)"; 
 		try(Connection con = conectar(); 
 				PreparedStatement pstm=con.prepareStatement(sql)){
+
 			pstm.setString(1, login);
+		
 			pstm.setString(2, login);
+			
 			pstm.setString(3, password);
+			
 			ResultSet rs = pstm.executeQuery();
 			if (rs.next()) {
 				email = rs.getString("email");

@@ -29,7 +29,7 @@ public class ControladorReservas implements WindowListener {
 		inicializar();
 	}
 	private void inicializar() {
-
+		jfre.setVisible(true);
 		jfre.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		jfre.addWindowListener(this);
 

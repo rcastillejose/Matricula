@@ -49,8 +49,7 @@ public class JFReservar extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public JFReservar(Alumno a) {
-		this.a=a;
+	public JFReservar() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 927, 672);
 		contentPane = new JPanel();

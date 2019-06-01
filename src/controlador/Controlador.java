@@ -86,13 +86,13 @@ public class Controlador implements ActionListener {
 	}
 	
 	private void abrirFormularioReservas(Alumno a) {
-		jfres = new JFReservar(a);
+		JFReservar jfres = new JFReservar();
 		Dimension deskSize = Toolkit.getDefaultToolkit().getScreenSize() ;
 		Dimension ifSize = jfres.getSize();
 		jfres.setLocation((deskSize.width - ifSize.width) / 2, (deskSize.height - ifSize.height) /2);
 		vista.setVisible(false);
 		vista.setLocationRelativeTo(null);	
-		jfres.setVisible(false);
+		ControladorReservas controlRes = new ControladorReservas(vista,jfres,modelo,a);
 	}
 	
 	
