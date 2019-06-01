@@ -434,5 +434,5 @@ public class JFAdministrador extends JFrame {
             // Allow all other days.
             return true;
         }
-}
+	}
 }

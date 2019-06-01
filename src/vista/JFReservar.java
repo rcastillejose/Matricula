@@ -8,11 +8,20 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import modelo.Alumno;
+
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import com.github.lgooddatepicker.components.CalendarPanel;
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
+import com.github.lgooddatepicker.optionalusertools.DateVetoPolicy;
+
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+
 import javax.swing.border.TitledBorder;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JScrollPane;
@@ -58,6 +67,9 @@ public class JFReservar extends JFrame {
 		
 		cPDiaReserva = new CalendarPanel();
 		cPDiaReserva.setBorder(new TitledBorder(null, "Dia de Reserva", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		DatePickerSettings dateSettings = new DatePickerSettings();
+		cPDiaReserva = new CalendarPanel(dateSettings);
+	    dateSettings.setVetoPolicy(new SampleDateVetoPolicy());
 		
 		JLabel lblHazTuReserva = new JLabel("HAZ TU RESERVA");
 		lblHazTuReserva.setFont(new Font("Dialog", Font.BOLD, 21));
@@ -120,5 +132,28 @@ public class JFReservar extends JFrame {
 		tReservas = new JTable();
 		scrollPane.setViewportView(tReservas);
 		contentPane.setLayout(gl_contentPane);
+	}
+	private static class SampleDateVetoPolicy implements DateVetoPolicy {
+
+        /**
+         * isDateAllowed, Return true if a date should be allowed, or false if a date should be
+         * vetoed.
+         */
+        @Override
+        public boolean isDateAllowed(LocalDate date) {
+        	LocalDate today = LocalDate.now();
+        	LocalDate maxDate = today.plusMonths(5);
+        	
+
+            // Disallow odd numbered saturdays.
+            if ((date.getDayOfWeek() == DayOfWeek.SATURDAY) || (date.getDayOfWeek() == DayOfWeek.SUNDAY)) 
+                return false;
+            
+            if (date.isAfter(maxDate) || date.isBefore(today))
+            	return false;
+            
+            // Allow all other days.
+            return true;
+        }
 	}
 }
