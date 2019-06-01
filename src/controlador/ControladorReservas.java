@@ -2,11 +2,15 @@ package controlador;
 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.ArrayList;
+import java.util.Map;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 
 import baseDeDatos.Modelo;
 import modelo.Alumno;
+
 import vista.JFAdministrador;
 import vista.JFLogin;
 import vista.JFReservar;
@@ -38,6 +42,20 @@ public class ControladorReservas implements WindowListener {
 	public void go() {
 		jfre.setVisible(true);
 	}
+	
+	private void actualizarComboboxCursos() {
+		
+		DefaultComboBoxModel dcbm = new DefaultComboBoxModel();
+		dcbm.removeAllElements();
+
+		ArrayList<String> resultado = modelo.obtenerCursos();
+		
+		for (int i = 0; i<resultado.size();i++) {
+			dcbm.addElement(resultado.get(i));
+		}
+		jfre.cBCurso.setModel(dcbm);
+	}
+	
 	@Override
 	public void windowActivated(WindowEvent arg0) {
 		// TODO Auto-generated method stub

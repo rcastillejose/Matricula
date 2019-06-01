@@ -5,6 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import modelo.Alumno;
 
 public class Modelo extends Database {
@@ -50,6 +53,22 @@ public class Modelo extends Database {
 			e.printStackTrace();
 			return a;
 		}
+	}
+	
+	public ArrayList<String> obtenerCursos(){
+		ArrayList<String> resultadoSalida = new ArrayList<String>();
+		Map<Integer,ArrayList<Object>> resultadoBD;
+		String fields="cursoYear";
+		resultadoBD=select("cursoYear","Curso",null);
+		String descripcion;
+		
+		for(Integer key : resultadoBD.keySet()) {
+			
+			descripcion = resultadoBD.get(key).get(1).toString();
+			resultadoSalida.add(descripcion);
+		}
+		
+		return resultadoSalida;
 	}
 		
 }
