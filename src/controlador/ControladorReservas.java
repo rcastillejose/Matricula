@@ -2,7 +2,9 @@ package controlador;
 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Map;
 
 import javax.swing.DefaultComboBoxModel;
@@ -32,7 +34,7 @@ public class ControladorReservas implements WindowListener {
 		jfre.setVisible(true);
 		jfre.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		jfre.addWindowListener(this);
-
+		actualizarComboboxCursos();
 		// Anadir las acciones a los botones del formulario padre
 
 		// Ponemos a escuchar las acciones del usuario
@@ -44,16 +46,19 @@ public class ControladorReservas implements WindowListener {
 	}
 	
 	private void actualizarComboboxCursos() {
-		
+		String curso;
+		String aux;
 		DefaultComboBoxModel dcbm = new DefaultComboBoxModel();
 		dcbm.removeAllElements();
 
 		ArrayList<String> resultado = modelo.obtenerCursos();
-		
 		for (int i = 0; i<resultado.size();i++) {
-			dcbm.addElement(resultado.get(i));
+			curso =resultado.get(i);
+			aux = curso.substring(0,4);
+			dcbm.addElement(aux);
 		}
 		jfre.cBCurso.setModel(dcbm);
+		System.out.println(dcbm.getSelectedItem());
 	}
 	
 	@Override

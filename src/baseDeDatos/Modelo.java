@@ -60,20 +60,44 @@ public class Modelo extends Database {
 	}
 	
 	public ArrayList<String> obtenerCursos(){
-		ArrayList<String> resultadoSalida = new ArrayList<String>();
-		Map<Integer,ArrayList<Object>> resultadoBD;
-		String fields="cursoYear";
-		resultadoBD=select("cursoYear","Curso",null);
-		String descripcion;
+		ArrayList<String> resultado = new ArrayList<String>();
 		
-		for(Integer key : resultadoBD.keySet()) {
+		String query = "SELECT cursoYear FROM Curso";
+		
+		System.out.print(query);
+		try(Connection con = conectar();
+				Statement stm = con.createStatement();
+				ResultSet rs = stm.executeQuery(query)){
+						
+			while (rs.next()) {
+				resultado.add(rs.getString("cursoYear"));
+			}
 			
-			descripcion = resultadoBD.get(key).get(1).toString();
-			resultadoSalida.add(descripcion);
+			
+		} catch (SQLException sqle) {
+			// TODO Auto-generated catch block
+			sqle.printStackTrace();
 		}
 		
-		return resultadoSalida;
+		return resultado;
+		
+		
 	}
+//	public ArrayList<String> obtenerCursos(){
+//		ArrayList<String> resultadoSalida = new ArrayList<String>();
+//		Map<Integer,ArrayList<Object>> resultadoBD;
+//		String fields="cursoYear";
+//		resultadoBD=select("cursoYear","Curso",null);
+//		String descripcion;
+//		
+//		for(Integer key : resultadoBD.keySet()) {
+//			
+//			descripcion = resultadoBD.get(key).get(1).toString();
+//			resultadoSalida.add(descripcion);
+//		}
+//		
+//		return resultadoSalida;
+//	}
 		
 }
 	
