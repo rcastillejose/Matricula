@@ -1,14 +1,23 @@
 package baseDeDatos;
 
+import java.awt.Image;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import controlador.Reserva;
+import controlador.select;
 import modelo.Alumno;
+import modelo.Periodo;
+
 
 public class Modelo extends Database {
 	/**
@@ -81,8 +90,64 @@ public class Modelo extends Database {
 		
 		return resultado;
 		
-		
 	}
+	
+	public Map<Integer, Periodo> obtenerPeriodosReservas(String curso){
+		
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
+			
+			Map<Integer,Periodo> resultadoSalida = new LinkedHashMap<Integer,Periodo>();
+			Map<Integer,ArrayList<Object>> resultadoBD;
+			
+			resultadoBD=select("idPeriodo,dia_inicio,dia_fin,hora_inicio,hora_fin,intervalo,habilitado,cursoYear","Periodo","cursoYear="+curso+" AND habilitado=1");
+			
+			LocalDate dia_inicio;
+			LocalDate dia_fin;
+			LocalTime hora_inicio;
+			LocalTime hora_fin;
+			LocalTime intervalo;
+			int habilitado;
+			String cursoYear;
+			
+			for(Integer key : resultadoBD.keySet()) {
+				
+				dia_inicio = LocalDate.parse(String.valueOf(resultadoBD.get(key).get(2)),formatter);
+				dia_fin = LocalDate.parse(String.valueOf(resultadoBD.get(key).get(3)),formatter);
+				hora_inicio = LocalTime.parse(String.valueOf(resultadoBD.get(key).get(3)),dtf);
+				hora_fin = LocalTime.parse(String.valueOf(resultadoBD.get(key).get(3)),dtf);
+				intervalo = LocalTime.parse(String.valueOf(resultadoBD.get(key).get(3)),dtf);
+				habilitado = 1;
+				
+				resultadoSalida.put(key, new Periodo(key,dia_inicio,dia_fin,hora_inicio,hora_fin,intervalo,habilitado,curso));
+			}
+			
+			return resultadoSalida;
+	}
+	
+	public ArrayList<Reserva> obtenerReservas(LocalDate dia){
+		ArrayList<Reserva> resultado = new ArrayList<Reserva>();
+		
+		String query = "select * from Reserva where reserva_dia = "+"'"+dia+"'";
+		
+		System.out.print(query);
+		try(Connection con = conectar();
+				Statement stm = con.createStatement();
+				ResultSet rs = stm.executeQuery(query)){
+						
+			while (rs.next()) {
+				resultado.add(rs.getString("cursoYear"));
+			}
+			
+			
+		} catch (SQLException sqle) {
+			// TODO Auto-generated catch block
+			sqle.printStackTrace();
+		}
+		
+		return resultado;
+	}
+	
 }
 	
 	

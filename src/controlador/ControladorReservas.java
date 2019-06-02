@@ -2,18 +2,19 @@ package controlador;
 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Map;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
-
+import javax.swing.border.TitledBorder;
+import com.github.lgooddatepicker.components.DatePickerSettings;
+import com.github.lgooddatepicker.optionalusertools.DateVetoPolicy;
 import baseDeDatos.Modelo;
 import modelo.Alumno;
-
-import vista.JFAdministrador;
+import modelo.Periodo;
 import vista.JFLogin;
 import vista.JFReservar;
 
@@ -35,6 +36,7 @@ public class ControladorReservas implements WindowListener {
 		jfre.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		jfre.addWindowListener(this);
 		actualizarComboboxCursos();
+		iniciarCalendario();
 		// Anadir las acciones a los botones del formulario padre
 
 		// Ponemos a escuchar las acciones del usuario
@@ -59,6 +61,30 @@ public class ControladorReservas implements WindowListener {
 		}
 		jfre.cBCurso.setModel(dcbm);
 		System.out.println(dcbm.getSelectedItem());
+	}
+	
+	private void iniciarCalendario() {
+//		final LocalDate today = LocalDate.now();
+		jfre.cPDiaReserva.setBorder(new TitledBorder(null, "Dia de Reserva", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		DatePickerSettings dateSettings = new DatePickerSettings();
+//		dateSettings.setDateRangeLimits(today.minusDays(20), today.plusDays(20));
+		
+//	    dateSettings.setVetoPolicy(new SampleDateVetoPolicy());
+	    
+	    Map<Integer, Periodo> resultado = modelo.obtenerPeriodosReservas(String.valueOf(jfre.cBCurso.getSelectedItem()));
+
+		for (Integer key : resultado.keySet()) {
+			// dcbm.addElement(nodoEjemplar.getInfo().getId());
+		
+			dateSettings.setDateRangeLimits(resultado.get(key).getDia_inicio(), resultado.get(key).getDia_fin());
+
+		}
+		jfre.cPDiaReserva.setSettings(dateSettings);
+	    
+	}
+	
+	private void cargarReservas() {
+		
 	}
 	
 	@Override
@@ -98,5 +124,28 @@ public class ControladorReservas implements WindowListener {
 		// TODO Auto-generated method stub
 		
 	}
+	private static class SampleDateVetoPolicy implements DateVetoPolicy {
 
+        /**
+         * isDateAllowed, Return true if a date should be allowed, or false if a date should be
+         * vetoed.
+         */
+        @Override
+        public boolean isDateAllowed(LocalDate date) {
+        	LocalDate today = LocalDate.now();
+        	LocalDate maxDate = today.plusMonths(5);
+        	
+
+            // Disallow odd numbered saturdays.
+            if ((date.getDayOfWeek() == DayOfWeek.SATURDAY) || (date.getDayOfWeek() == DayOfWeek.SUNDAY)) 
+                return false;
+            
+            if (date.isAfter(maxDate) || date.isBefore(today))
+            	return false;
+            
+            
+            // Allow all other days.
+            return true;
+        }
+	}
 }

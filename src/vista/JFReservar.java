@@ -66,10 +66,6 @@ public class JFReservar extends JFrame {
 		setContentPane(contentPane);
 		
 		cPDiaReserva = new CalendarPanel();
-		cPDiaReserva.setBorder(new TitledBorder(null, "Dia de Reserva", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		DatePickerSettings dateSettings = new DatePickerSettings();
-		cPDiaReserva = new CalendarPanel(dateSettings);
-	    dateSettings.setVetoPolicy(new SampleDateVetoPolicy());
 		
 		JLabel lblHazTuReserva = new JLabel("HAZ TU RESERVA");
 		lblHazTuReserva.setFont(new Font("Dialog", Font.BOLD, 21));
@@ -133,27 +129,27 @@ public class JFReservar extends JFrame {
 		scrollPane.setViewportView(tReservas);
 		contentPane.setLayout(gl_contentPane);
 	}
-	private static class SampleDateVetoPolicy implements DateVetoPolicy {
-
-        /**
-         * isDateAllowed, Return true if a date should be allowed, or false if a date should be
-         * vetoed.
-         */
-        @Override
-        public boolean isDateAllowed(LocalDate date) {
-        	LocalDate today = LocalDate.now();
-        	LocalDate maxDate = today.plusMonths(5);
-        	
-
-            // Disallow odd numbered saturdays.
-            if ((date.getDayOfWeek() == DayOfWeek.SATURDAY) || (date.getDayOfWeek() == DayOfWeek.SUNDAY)) 
-                return false;
-            
-            if (date.isAfter(maxDate) || date.isBefore(today))
-            	return false;
-            
-            // Allow all other days.
-            return true;
-        }
-	}
+//	private static class SampleDateVetoPolicy implements DateVetoPolicy {
+//
+//        /**
+//         * isDateAllowed, Return true if a date should be allowed, or false if a date should be
+//         * vetoed.
+//         */
+//        @Override
+//        public boolean isDateAllowed(LocalDate date) {
+//        	LocalDate today = LocalDate.now();
+//        	LocalDate maxDate = today.plusMonths(5);
+//        	
+//
+//            // Disallow odd numbered saturdays.
+//            if ((date.getDayOfWeek() == DayOfWeek.SATURDAY) || (date.getDayOfWeek() == DayOfWeek.SUNDAY)) 
+//                return false;
+//            
+//            if (date.isAfter(maxDate) || date.isBefore(today))
+//            	return false;
+//            
+//            // Allow all other days.
+//            return true;
+//        }
+//	}
 }
