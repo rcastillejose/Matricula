@@ -1,5 +1,9 @@
 package controlador;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.time.DayOfWeek;
@@ -10,15 +14,18 @@ import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableModel;
+
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import com.github.lgooddatepicker.optionalusertools.DateVetoPolicy;
 import baseDeDatos.Modelo;
 import modelo.Alumno;
 import modelo.Periodo;
+import modelo.Reserva;
 import vista.JFLogin;
 import vista.JFReservar;
 
-public class ControladorReservas implements WindowListener {
+public class ControladorReservas implements ActionListener, MouseListener, WindowListener {
 	private JFReservar jfre ;
 	private Modelo modelo;
 	private JFLogin vista;
@@ -37,10 +44,18 @@ public class ControladorReservas implements WindowListener {
 		jfre.addWindowListener(this);
 		actualizarComboboxCursos();
 		iniciarCalendario();
-		// Anadir las acciones a los botones del formulario padre
-
-		// Ponemos a escuchar las acciones del usuario
-
+		
+		// Añadir las acciones a los botones del formulario padre
+				jfre.btnReservar.setActionCommand("reservar");
+				jfre.cBCurso.setActionCommand("actualizarCursos");
+				
+				
+				
+				// Ponemos a escuchar las acciones del usuario
+				jfre.btnReservar.addActionListener(this);
+				jfre.cBCurso.addActionListener(this);
+				
+				jfre.cPDiaReserva.addMouseListener(this);
 	}
 
 	public void go() {
@@ -84,6 +99,17 @@ public class ControladorReservas implements WindowListener {
 	}
 	
 	private void cargarReservas() {
+		
+		Map<Integer,Reserva> resultado = modelo.obtenerReservas(jfre.cPDiaReserva.getSelectedDate());
+			DefaultTableModel dtm = new DefaultTableModel(new Object[][] {},
+					new String[] { "Dia de la reserva", "Hora de Inicio", "Periodo"});
+
+			for (Integer key : resultado.keySet()) {
+
+				dtm.addRow(new Object[] { key, resultado.get(key).getReserva_dia(), resultado.get(key).getReserva_hora(),
+						resultado.get(key).getIdPeriodo() });
+			}
+			jfre.tReservas.setModel(dtm);
 		
 	}
 	
@@ -147,5 +173,35 @@ public class ControladorReservas implements WindowListener {
             // Allow all other days.
             return true;
         }
+	}
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		cargarReservas();
+	}
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 }

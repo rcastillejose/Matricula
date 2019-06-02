@@ -13,10 +13,9 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import controlador.Reserva;
-import controlador.select;
 import modelo.Alumno;
 import modelo.Periodo;
+import modelo.Reserva;
 
 
 public class Modelo extends Database {
@@ -125,27 +124,34 @@ public class Modelo extends Database {
 			return resultadoSalida;
 	}
 	
-	public ArrayList<Reserva> obtenerReservas(LocalDate dia){
-		ArrayList<Reserva> resultado = new ArrayList<Reserva>();
+	public Map<Integer,Reserva> obtenerReservas(LocalDate dia){
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
 		
-		String query = "select * from Reserva where reserva_dia = "+"'"+dia+"'";
+		Map<Integer,Reserva> resultadoSalida = new LinkedHashMap<Integer,Reserva>();
+		Map<Integer,ArrayList<Object>> resultadoBD=null;
 		
-		System.out.print(query);
-		try(Connection con = conectar();
-				Statement stm = con.createStatement();
-				ResultSet rs = stm.executeQuery(query)){
-						
-			while (rs.next()) {
-				resultado.add(rs.getString("cursoYear"));
-			}
+		String query = "select idPeriodo,email,reserva_dia,reserva_hora,idReserva from Reserva where reserva_dia = "+"'"+dia+"'";
+		
+		int idPeriodo;
+		String email;
+		LocalDate reserva_dia;
+		LocalTime reserva_hora;
+		int idReserva;
+		
+		
+		for(Integer key : resultadoBD.keySet()) {
 			
+			idPeriodo = Integer.parseInt(String.valueOf(resultadoBD.get(key).get(1)));
+			email = resultadoBD.get(key).get(2).toString();
+			reserva_dia = LocalDate.parse(String.valueOf(resultadoBD.get(key).get(3)),formatter);
+			reserva_hora = LocalTime.parse(String.valueOf(resultadoBD.get(key).get(4)),dtf);
+			idReserva = Integer.parseInt(String.valueOf(resultadoBD.get(key).get(5)));
 			
-		} catch (SQLException sqle) {
-			// TODO Auto-generated catch block
-			sqle.printStackTrace();
+			resultadoSalida.put(key, new Reserva(idPeriodo,email,reserva_dia,reserva_hora,idReserva));
 		}
 		
-		return resultado;
+		return resultadoSalida;
 	}
 	
 }
