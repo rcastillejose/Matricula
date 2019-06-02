@@ -99,7 +99,7 @@ public class Modelo extends Database {
 			Map<Integer,Periodo> resultadoSalida = new LinkedHashMap<Integer,Periodo>();
 			Map<Integer,ArrayList<Object>> resultadoBD;
 			
-			resultadoBD=select("idPeriodo,dia_inicio,dia_fin,hora_inicio,hora_fin,intervalo,habilitado,cursoYear","Periodo","cursoYear="+curso+" AND habilitado=1");
+			resultadoBD=selectPeriodo("idPeriodo,dia_inicio,dia_fin,hora_inicio,hora_fin,intervalo,habilitado,cursoYear","Periodo","cursoYear="+curso+" AND habilitado=1");
 			
 			LocalDate dia_inicio;
 			LocalDate dia_fin;
@@ -111,11 +111,11 @@ public class Modelo extends Database {
 			
 			for(Integer key : resultadoBD.keySet()) {
 				
-				dia_inicio = LocalDate.parse(String.valueOf(resultadoBD.get(key).get(2)),formatter);
-				dia_fin = LocalDate.parse(String.valueOf(resultadoBD.get(key).get(3)),formatter);
+				dia_inicio = LocalDate.parse(String.valueOf(resultadoBD.get(key).get(1)),formatter);
+				dia_fin = LocalDate.parse(String.valueOf(resultadoBD.get(key).get(2)),formatter);
 				hora_inicio = LocalTime.parse(String.valueOf(resultadoBD.get(key).get(3)),dtf);
-				hora_fin = LocalTime.parse(String.valueOf(resultadoBD.get(key).get(3)),dtf);
-				intervalo = LocalTime.parse(String.valueOf(resultadoBD.get(key).get(3)),dtf);
+				hora_fin = LocalTime.parse(String.valueOf(resultadoBD.get(key).get(4)),dtf);
+				intervalo = LocalTime.parse(String.valueOf(resultadoBD.get(key).get(5)),dtf);
 				habilitado = 1;
 				
 				resultadoSalida.put(key, new Periodo(key,dia_inicio,dia_fin,hora_inicio,hora_fin,intervalo,habilitado,curso));

@@ -256,6 +256,38 @@ public class Database {
 		
 		return resultado;
 	}
+	protected Map<Integer, ArrayList<Object>> selectPeriodo(String fields, String tables, String where){
+		Map<Integer,ArrayList<Object>> resultado = new LinkedHashMap<Integer, ArrayList<Object>>();
+		ArrayList<Object> lista;
+		
+		String query = "SELECT "+ fields + " FROM "+ tables;
+		if (where != null) {
+			query += " WHERE "+ where;
+		}
+		System.out.print(query);
+		try(Connection con = conectar();
+				Statement stm = con.createStatement();
+				ResultSet rs = stm.executeQuery(query)){
+			
+			int numColumnas = rs.getMetaData().getColumnCount();
+			
+			while (rs.next()) {
+				lista = new ArrayList<Object>();
+				
+				for (int i = 1 ; i <= numColumnas ; i++ ) 
+					lista.add(rs.getObject(i));
+				
+				resultado.put(rs.getInt("idPeriodo"), lista);
+			}
+			
+			
+		} catch (SQLException sqle) {
+			// TODO Auto-generated catch block
+			sqle.printStackTrace();
+		}
+		
+		return resultado;
+	}
 	protected Map<Integer, ArrayList<Object>> select(String fields, String tables, String where,String id){
 		Map<Integer,ArrayList<Object>> resultado = new LinkedHashMap<Integer, ArrayList<Object>>();
 		ArrayList<Object> lista;
