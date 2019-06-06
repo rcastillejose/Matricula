@@ -93,6 +93,7 @@ public class Controlador implements ActionListener {
 		vista.setVisible(false);
 		vista.setLocationRelativeTo(null);	
 		ControladorReservas controlRes = new ControladorReservas(vista,jfres,modelo,a);
+		controlRes.go();
 	}
 	
 	

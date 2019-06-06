@@ -2,6 +2,7 @@ package baseDeDatos;
 
 import java.awt.Image;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,8 +11,10 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeSet;
 
 import modelo.Alumno;
 import modelo.Periodo;
@@ -91,68 +94,78 @@ public class Modelo extends Database {
 		
 	}
 	
-	public Map<Integer, Periodo> obtenerPeriodosReservas(String curso){
+	
+	public HashSet<LocalDate> obtenerDias(String curso) {
+		HashSet<LocalDate> resultado = new HashSet<LocalDate>();
+		String query = "select r.reserva_dia from Reserva r join Periodo p on(r.idPeriodo=r.idPeriodo) " + 
+				"where p.cursoYear="+curso+" AND p.habilitado = 1 group by r.reserva_dia";
+		LocalDate dia;
 		
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
+		try (Connection con = conectar();
+				Statement stm = con.createStatement();
+				ResultSet rs = stm.executeQuery(query);){
 			
-			Map<Integer,Periodo> resultadoSalida = new LinkedHashMap<Integer,Periodo>();
-			Map<Integer,ArrayList<Object>> resultadoBD;
 			
-			resultadoBD=selectPeriodo("idPeriodo,dia_inicio,dia_fin,hora_inicio,hora_fin,intervalo,habilitado,cursoYear","Periodo","cursoYear="+curso+" AND habilitado=1");
-			
-			LocalDate dia_inicio;
-			LocalDate dia_fin;
-			LocalTime hora_inicio;
-			LocalTime hora_fin;
-			LocalTime intervalo;
-			int habilitado;
-			String cursoYear;
-			
-			for(Integer key : resultadoBD.keySet()) {
-				
-				dia_inicio = LocalDate.parse(String.valueOf(resultadoBD.get(key).get(1)),formatter);
-				dia_fin = LocalDate.parse(String.valueOf(resultadoBD.get(key).get(2)),formatter);
-				hora_inicio = LocalTime.parse(String.valueOf(resultadoBD.get(key).get(3)),dtf);
-				hora_fin = LocalTime.parse(String.valueOf(resultadoBD.get(key).get(4)),dtf);
-				intervalo = LocalTime.parse(String.valueOf(resultadoBD.get(key).get(5)),dtf);
-				habilitado = 1;
-				
-				resultadoSalida.put(key, new Periodo(key,dia_inicio,dia_fin,hora_inicio,hora_fin,intervalo,habilitado,curso));
+			while(rs.next()) {
+				dia = rs.getDate(1).toLocalDate();
+				resultado.add(dia);
 			}
-			
-			return resultadoSalida;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return resultado;
 	}
 	
-	public Map<Integer,Reserva> obtenerReservas(LocalDate dia){
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
+	
+	public Map<Integer,Reserva> obtenerReservas(Date dia){
+//		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
 		
 		Map<Integer,Reserva> resultadoSalida = new LinkedHashMap<Integer,Reserva>();
-		Map<Integer,ArrayList<Object>> resultadoBD=null;
+		Map<Integer,ArrayList<Object>> resultadoBD=new LinkedHashMap<Integer,ArrayList<Object>>();
 		
-		String query = "select idPeriodo,email,reserva_dia,reserva_hora,idReserva from Reserva where reserva_dia = "+"'"+dia+"'";
+		resultadoBD = select("idReserva,reserva_dia,reserva_hora,idPeriodo","Reserva","reserva_dia = "+"'"+dia+"' AND email IS NULL","idReserva");
 		
-		int idPeriodo;
-		String email;
 		LocalDate reserva_dia;
 		LocalTime reserva_hora;
-		int idReserva;
-		
+		int idPeriodo;
+	
 		
 		for(Integer key : resultadoBD.keySet()) {
 			
-			idPeriodo = Integer.parseInt(String.valueOf(resultadoBD.get(key).get(1)));
-			email = resultadoBD.get(key).get(2).toString();
-			reserva_dia = LocalDate.parse(String.valueOf(resultadoBD.get(key).get(3)),formatter);
-			reserva_hora = LocalTime.parse(String.valueOf(resultadoBD.get(key).get(4)),dtf);
-			idReserva = Integer.parseInt(String.valueOf(resultadoBD.get(key).get(5)));
+			reserva_dia = LocalDate.parse(String.valueOf(resultadoBD.get(key).get(1)));
+			reserva_hora = LocalTime.parse(String.valueOf(resultadoBD.get(key).get(2)));
+			idPeriodo = Integer.parseInt(String.valueOf(resultadoBD.get(key).get(3)));
 			
-			resultadoSalida.put(key, new Reserva(idPeriodo,email,reserva_dia,reserva_hora,idReserva));
+			resultadoSalida.put(key, new Reserva(key,null,reserva_dia,reserva_hora,idPeriodo));
 		}
 		
 		return resultadoSalida;
 	}
+	
+	public int comprobarAlumno(String  email) {
+		String sql = "SELECT COUNT(*) FROM Reserva WHERE email= '"+email+"'"; 
+		try(Connection con = conectar(); 
+				Statement stm=con.createStatement();
+				ResultSet rs = stm.executeQuery(sql);){
+			
+			rs.next();
+			return rs.getInt(1);
+				
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return 0;
+		}
+	}
+	
+	public boolean reservar(String email, LocalDate dia, LocalTime hora) {
+		return update("Reserva","email="+"'"+email+"'","reserva_dia='"+dia+"' AND reserva_hora='"+hora+"'");
+		
+	}
+	
+	 
 	
 }
 	

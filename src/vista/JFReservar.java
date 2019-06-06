@@ -28,6 +28,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import java.awt.FlowLayout;
 
 public class JFReservar extends JFrame {
 
@@ -38,22 +39,9 @@ public class JFReservar extends JFrame {
 	private JLabel lblCurso;
 	public JComboBox cBCurso;
 	public Alumno a;
+	public JButton btnEliminarReserva;
+	public JLabel lblBienvenido;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-//					JFReservar frame = new JFReservar(a);
-//					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the frame.
@@ -75,51 +63,67 @@ public class JFReservar extends JFrame {
 		
 		btnReservar = new JButton("Reservar");
 		
-		lblCurso = new JLabel("Curso");
+		JPanel panel_1 = new JPanel();
 		
-		cBCurso = new JComboBox();
+		JPanel panel_2 = new JPanel();
+		
+		lblBienvenido = new JLabel("Bienvenido");
+		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap(369, Short.MAX_VALUE)
-					.addComponent(lblHazTuReserva)
-					.addGap(352))
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap(814, Short.MAX_VALUE)
+					.addContainerGap(808, Short.MAX_VALUE)
 					.addComponent(btnReservar)
 					.addContainerGap())
 				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblBienvenido)
+					.addPreferredGap(ComponentPlacement.RELATED, 278, Short.MAX_VALUE)
+					.addComponent(lblHazTuReserva)
+					.addGap(352))
+				.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
 					.addGap(64)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(lblCurso)
-							.addGap(18)
-							.addComponent(cBCurso, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE)
-							.addContainerGap())
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(cPDiaReserva, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED, 101, Short.MAX_VALUE)
-							.addComponent(panel, GroupLayout.PREFERRED_SIZE, 354, GroupLayout.PREFERRED_SIZE)
-							.addGap(91))))
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
+						.addComponent(panel_2, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(cPDiaReserva, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+					.addPreferredGap(ComponentPlacement.RELATED, 84, Short.MAX_VALUE)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
+						.addComponent(panel_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(panel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 354, Short.MAX_VALUE))
+					.addGap(91))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblHazTuReserva)
-					.addGap(58)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblCurso)
-						.addComponent(cBCurso, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGap(18)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(lblHazTuReserva))
+						.addComponent(lblBienvenido))
+					.addGap(39)
+					.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addComponent(cPDiaReserva, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(panel, GroupLayout.PREFERRED_SIZE, 343, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.RELATED, 111, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 41, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
 					.addComponent(btnReservar)
 					.addContainerGap())
 		);
+		panel_2.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		
+		lblCurso = new JLabel("Curso");
+		panel_2.add(lblCurso);
+		
+		cBCurso = new JComboBox();
+		panel_2.add(cBCurso);
+		panel_1.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		
+		btnEliminarReserva = new JButton("Eliminar reserva");
+		panel_1.add(btnEliminarReserva);
 		panel.setLayout(new BorderLayout(0, 0));
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -128,28 +132,6 @@ public class JFReservar extends JFrame {
 		tReservas = new JTable();
 		scrollPane.setViewportView(tReservas);
 		contentPane.setLayout(gl_contentPane);
+		
 	}
-//	private static class SampleDateVetoPolicy implements DateVetoPolicy {
-//
-//        /**
-//         * isDateAllowed, Return true if a date should be allowed, or false if a date should be
-//         * vetoed.
-//         */
-//        @Override
-//        public boolean isDateAllowed(LocalDate date) {
-//        	LocalDate today = LocalDate.now();
-//        	LocalDate maxDate = today.plusMonths(5);
-//        	
-//
-//            // Disallow odd numbered saturdays.
-//            if ((date.getDayOfWeek() == DayOfWeek.SATURDAY) || (date.getDayOfWeek() == DayOfWeek.SUNDAY)) 
-//                return false;
-//            
-//            if (date.isAfter(maxDate) || date.isBefore(today))
-//            	return false;
-//            
-//            // Allow all other days.
-//            return true;
-//        }
-//	}
 }

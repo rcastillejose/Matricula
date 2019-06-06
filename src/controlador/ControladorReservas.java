@@ -6,9 +6,15 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.sql.Date;
+import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Map;
 
 import javax.swing.DefaultComboBoxModel;
@@ -17,7 +23,11 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 import com.github.lgooddatepicker.components.DatePickerSettings;
+import com.github.lgooddatepicker.optionalusertools.CalendarListener;
 import com.github.lgooddatepicker.optionalusertools.DateVetoPolicy;
+import com.github.lgooddatepicker.zinternaltools.CalendarSelectionEvent;
+import com.github.lgooddatepicker.zinternaltools.YearMonthChangeEvent;
+
 import baseDeDatos.Modelo;
 import modelo.Alumno;
 import modelo.Periodo;
@@ -25,11 +35,15 @@ import modelo.Reserva;
 import vista.JFLogin;
 import vista.JFReservar;
 
-public class ControladorReservas implements ActionListener, MouseListener, WindowListener {
+public class ControladorReservas implements CalendarListener, ActionListener, MouseListener, WindowListener {
 	private JFReservar jfre ;
 	private Modelo modelo;
 	private JFLogin vista;
 	private Alumno a;
+	public static HashSet<LocalDate> lista=null;
+	
+	
+	boolean reserva;
 	
 	public ControladorReservas(JFLogin vista, JFReservar jfre, Modelo modelo, Alumno a) {
 		this.jfre = jfre;
@@ -38,28 +52,55 @@ public class ControladorReservas implements ActionListener, MouseListener, Windo
 		this.a=a;
 		inicializar();
 	}
-	private void inicializar() {
-		jfre.setVisible(true);
-		jfre.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		jfre.addWindowListener(this);
-		actualizarComboboxCursos();
-		iniciarCalendario();
-		
-		// Añadir las acciones a los botones del formulario padre
-				jfre.btnReservar.setActionCommand("reservar");
-				jfre.cBCurso.setActionCommand("actualizarCursos");
-				
-				
-				
-				// Ponemos a escuchar las acciones del usuario
-				jfre.btnReservar.addActionListener(this);
-				jfre.cBCurso.addActionListener(this);
-				
-				jfre.cPDiaReserva.addMouseListener(this);
-	}
-
+	
 	public void go() {
 		jfre.setVisible(true);
+	}
+	
+	private void inicializar() {
+
+		jfre.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		
+		actualizarComboboxCursos();
+		iniciarCalendario();
+		int tieneReserva =modelo.comprobarAlumno(a.getEmail());
+		if(tieneReserva>0) {
+			jfre.btnEliminarReserva.setVisible(true);
+			reserva=true;
+		} else {
+			jfre.btnEliminarReserva.setVisible(false);
+			reserva=false;
+		}
+		jfre.lblBienvenido.setText("Bienvenido "+a.getNombre());
+		
+		
+		// Añadir las acciones a los botones del formulario padre
+		jfre.btnReservar.setActionCommand("reservar");
+		jfre.btnEliminarReserva.setActionCommand("eliminarReserva");
+		jfre.cBCurso.setActionCommand("actualizarCursos");
+		
+		
+		// Ponemos a escuchar las acciones del usuario
+		jfre.btnReservar.addActionListener(this);
+		jfre.cBCurso.addActionListener(this);
+		jfre.btnEliminarReserva.addActionListener(this);
+		
+		jfre.tReservas.addMouseListener(this);
+		jfre.cPDiaReserva.addCalendarListener(this);
+		
+		jfre.addWindowListener(this);
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		String command = e.getActionCommand();
+		
+		if(command.equals("actualizarCursos")) {
+			iniciarCalendario();
+		} else if(command.equals("reservar")) {
+			crearReserva();
+		}
 	}
 	
 	private void actualizarComboboxCursos() {
@@ -79,30 +120,20 @@ public class ControladorReservas implements ActionListener, MouseListener, Windo
 	}
 	
 	private void iniciarCalendario() {
-//		final LocalDate today = LocalDate.now();
+
+		lista = modelo.obtenerDias(String.valueOf(jfre.cBCurso.getSelectedItem()));
 		jfre.cPDiaReserva.setBorder(new TitledBorder(null, "Dia de Reserva", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		DatePickerSettings dateSettings = new DatePickerSettings();
-//		dateSettings.setDateRangeLimits(today.minusDays(20), today.plusDays(20));
-		
-//	    dateSettings.setVetoPolicy(new SampleDateVetoPolicy());
-	    
-	    Map<Integer, Periodo> resultado = modelo.obtenerPeriodosReservas(String.valueOf(jfre.cBCurso.getSelectedItem()));
-
-		for (Integer key : resultado.keySet()) {
-			// dcbm.addElement(nodoEjemplar.getInfo().getId());
-		
-			dateSettings.setDateRangeLimits(resultado.get(key).getDia_inicio(), resultado.get(key).getDia_fin());
-
-		}
+		DatePickerSettings dateSettings = new DatePickerSettings();    
 		jfre.cPDiaReserva.setSettings(dateSettings);
+	    dateSettings.setVetoPolicy(new SampleDateVetoPolicy());
 	    
 	}
 	
 	private void cargarReservas() {
-		
-		Map<Integer,Reserva> resultado = modelo.obtenerReservas(jfre.cPDiaReserva.getSelectedDate());
+		Date dia = Date.valueOf(jfre.cPDiaReserva.getSelectedDate());
+		Map<Integer,Reserva> resultado = modelo.obtenerReservas(dia);
 			DefaultTableModel dtm = new DefaultTableModel(new Object[][] {},
-					new String[] { "Dia de la reserva", "Hora de Inicio", "Periodo"});
+					new String[] { "Reserva","Dia de la reserva", "Hora de Inicio", "Periodo"});
 
 			for (Integer key : resultado.keySet()) {
 
@@ -110,6 +141,58 @@ public class ControladorReservas implements ActionListener, MouseListener, Windo
 						resultado.get(key).getIdPeriodo() });
 			}
 			jfre.tReservas.setModel(dtm);
+		
+	}
+	
+	private void crearReserva() {
+		Date dia = Date.valueOf((String)jfre.tReservas.getValueAt(jfre.tReservas.getSelectedRow(), 1));
+		Time hora = Time.valueOf(jfre.tReservas.getValueAt(jfre.tReservas.getSelectedRow(), 2).toString());
+		System.out.println(dia);
+		System.out.println(hora);
+	}
+	
+	private void modificarReserva() {
+		
+	}
+	
+	private void eliminarReserva() {
+		
+	}
+	
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+		if (jfre.tReservas.getSelectedRow()!=-1) {
+			
+		}
+	}
+	
+	@Override
+	public void windowClosing(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+		System.out.println("Cerrando");
+		vista.setVisible(true);
+		jfre.dispose();
+	}
+	
+	private static class SampleDateVetoPolicy implements DateVetoPolicy {
+
+        /**
+         * isDateAllowed, Return true if a date should be allowed, or false if a date should be
+         * vetoed.
+         */
+        @Override
+        public boolean isDateAllowed(LocalDate date) {
+             	
+            return lista.contains(date);
+        }
+	}
+	
+	@Override
+	public void selectedDateChanged(CalendarSelectionEvent arg0) {
+		// TODO Auto-generated method stub
+		cargarReservas();
 		
 	}
 	
@@ -123,13 +206,7 @@ public class ControladorReservas implements ActionListener, MouseListener, Windo
 		// TODO Auto-generated method stub
 		
 	}
-	@Override
-	public void windowClosing(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		System.out.println("Cerrando");
-		vista.setVisible(true);
-		jfre.dispose();
-	}
+
 	@Override
 	public void windowDeactivated(WindowEvent arg0) {
 		// TODO Auto-generated method stub
@@ -150,35 +227,7 @@ public class ControladorReservas implements ActionListener, MouseListener, Windo
 		// TODO Auto-generated method stub
 		
 	}
-	private static class SampleDateVetoPolicy implements DateVetoPolicy {
 
-        /**
-         * isDateAllowed, Return true if a date should be allowed, or false if a date should be
-         * vetoed.
-         */
-        @Override
-        public boolean isDateAllowed(LocalDate date) {
-        	LocalDate today = LocalDate.now();
-        	LocalDate maxDate = today.plusMonths(5);
-        	
-
-            // Disallow odd numbered saturdays.
-            if ((date.getDayOfWeek() == DayOfWeek.SATURDAY) || (date.getDayOfWeek() == DayOfWeek.SUNDAY)) 
-                return false;
-            
-            if (date.isAfter(maxDate) || date.isBefore(today))
-            	return false;
-            
-            
-            // Allow all other days.
-            return true;
-        }
-	}
-	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		cargarReservas();
-	}
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
 		// TODO Auto-generated method stub
@@ -199,9 +248,11 @@ public class ControladorReservas implements ActionListener, MouseListener, Windo
 		// TODO Auto-generated method stub
 		
 	}
+
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
+	public void yearMonthChanged(YearMonthChangeEvent arg0) {
 		// TODO Auto-generated method stub
 		
 	}
+
 }
