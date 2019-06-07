@@ -50,12 +50,16 @@ public class JFAdministrador extends JFrame {
 	public JButton btnModificar;
 	public JButton btnEliminar;
 	public JTextPane tPBody;
-	public JCheckBox chAdjunto;
 	public JButton btnRealizarCambios;
 	public DatePicker dPDiaInicio;
 	public DatePicker dPDiaFin;
 	public JButton btnAadirCurso;
 	public JComboBox cBCursos;
+	private DatePicker dPDiaIniMod;
+	private DatePicker dPDiaFinMod;
+	private TimePicker tPHoraInicioMod;
+	private TimePicker tPDiaFinMod;
+	private JSpinner spIntervaloMod;
 
 	/**
 	 * Create the frame.
@@ -74,8 +78,8 @@ public class JFAdministrador extends JFrame {
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		contentPane.add(tabbedPane, BorderLayout.CENTER);
 		
-		JPanel panel = new JPanel();
-		tabbedPane.addTab("Crear Periodos", null, panel, null);
+		JPanel crearPeriodo = new JPanel();
+		tabbedPane.addTab("Crear Periodos", null, crearPeriodo, null);
 		
 		JLabel lblCrearPeriodo = new JLabel("CREAR PERIODO");
 		lblCrearPeriodo.setFont(new Font("Dialog", Font.BOLD, 21));
@@ -90,36 +94,36 @@ public class JFAdministrador extends JFrame {
 		
 		JPanel panel_9 = new JPanel();
 		panel_9.setBorder(new TitledBorder(null, "Cursos", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		GroupLayout gl_panel = new GroupLayout(panel);
-		gl_panel.setHorizontalGroup(
-			gl_panel.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_panel.createSequentialGroup()
-					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel.createSequentialGroup()
+		GroupLayout gl_crearPeriodo = new GroupLayout(crearPeriodo);
+		gl_crearPeriodo.setHorizontalGroup(
+			gl_crearPeriodo.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_crearPeriodo.createSequentialGroup()
+					.addGroup(gl_crearPeriodo.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_crearPeriodo.createSequentialGroup()
 							.addGap(350)
 							.addComponent(lblCrearPeriodo))
-						.addGroup(gl_panel.createSequentialGroup()
+						.addGroup(gl_crearPeriodo.createSequentialGroup()
 							.addGap(53)
-							.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
+							.addGroup(gl_crearPeriodo.createParallelGroup(Alignment.TRAILING)
 								.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 369, GroupLayout.PREFERRED_SIZE)
-								.addGroup(gl_panel.createParallelGroup(Alignment.LEADING, false)
-									.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
+								.addGroup(gl_crearPeriodo.createParallelGroup(Alignment.LEADING, false)
+									.addGroup(Alignment.TRAILING, gl_crearPeriodo.createSequentialGroup()
 										.addComponent(panel_9, GroupLayout.PREFERRED_SIZE, 290, GroupLayout.PREFERRED_SIZE)
 										.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 										.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 368, GroupLayout.PREFERRED_SIZE))
 									.addComponent(panel_5, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 801, GroupLayout.PREFERRED_SIZE)))))
 					.addContainerGap(55, Short.MAX_VALUE))
 		);
-		gl_panel.setVerticalGroup(
-			gl_panel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel.createSequentialGroup()
+		gl_crearPeriodo.setVerticalGroup(
+			gl_crearPeriodo.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_crearPeriodo.createSequentialGroup()
 					.addGap(21)
 					.addComponent(lblCrearPeriodo)
 					.addGap(37)
 					.addComponent(panel_5, GroupLayout.PREFERRED_SIZE, 223, GroupLayout.PREFERRED_SIZE)
 					.addGap(18)
-					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel.createSequentialGroup()
+					.addGroup(gl_crearPeriodo.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_crearPeriodo.createSequentialGroup()
 							.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addGap(69)
 							.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 39, GroupLayout.PREFERRED_SIZE))
@@ -301,11 +305,11 @@ public class JFAdministrador extends JFrame {
 							.addContainerGap())))
 		);
 		panel_3.setLayout(gl_panel_3);
-		panel.setLayout(gl_panel);
+		crearPeriodo.setLayout(gl_crearPeriodo);
 		
 		
-		JPanel panel_1 = new JPanel();
-		tabbedPane.addTab("Modificar Periodos", null, panel_1, null);
+		JPanel modificarPeriodo = new JPanel();
+		tabbedPane.addTab("Modificar Periodos", null, modificarPeriodo, null);
 		
 		JLabel lblModififarPeriodo = new JLabel("MODIFICAR PERIODO");
 		lblModififarPeriodo.setFont(new Font("Dialog", Font.BOLD, 21));
@@ -313,33 +317,108 @@ public class JFAdministrador extends JFrame {
 		JPanel panel_6 = new JPanel();
 		
 		JPanel panel_7 = new JPanel();
-		GroupLayout gl_panel_1 = new GroupLayout(panel_1);
-		gl_panel_1.setHorizontalGroup(
-			gl_panel_1.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_1.createSequentialGroup()
+		
+		JPanel panel = new JPanel();
+		GroupLayout gl_modificarPeriodo = new GroupLayout(modificarPeriodo);
+		gl_modificarPeriodo.setHorizontalGroup(
+			gl_modificarPeriodo.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_modificarPeriodo.createSequentialGroup()
 					.addGap(327)
 					.addComponent(lblModififarPeriodo)
 					.addContainerGap(342, Short.MAX_VALUE))
-				.addGroup(gl_panel_1.createSequentialGroup()
+				.addGroup(gl_modificarPeriodo.createSequentialGroup()
 					.addGap(291)
 					.addComponent(panel_7, GroupLayout.PREFERRED_SIZE, 283, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap(335, Short.MAX_VALUE))
-				.addGroup(Alignment.TRAILING, gl_panel_1.createSequentialGroup()
+				.addGroup(gl_modificarPeriodo.createSequentialGroup()
 					.addContainerGap(58, Short.MAX_VALUE)
-					.addComponent(panel_6, GroupLayout.PREFERRED_SIZE, 795, GroupLayout.PREFERRED_SIZE)
-					.addGap(56))
+					.addComponent(panel_6, GroupLayout.PREFERRED_SIZE, 397, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)
+					.addGap(36))
 		);
-		gl_panel_1.setVerticalGroup(
-			gl_panel_1.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_1.createSequentialGroup()
+		gl_modificarPeriodo.setVerticalGroup(
+			gl_modificarPeriodo.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_modificarPeriodo.createSequentialGroup()
 					.addGap(21)
 					.addComponent(lblModififarPeriodo)
 					.addGap(40)
-					.addComponent(panel_6, GroupLayout.PREFERRED_SIZE, 370, GroupLayout.PREFERRED_SIZE)
+					.addGroup(gl_modificarPeriodo.createParallelGroup(Alignment.LEADING)
+						.addComponent(panel_6, GroupLayout.PREFERRED_SIZE, 370, GroupLayout.PREFERRED_SIZE)
+						.addComponent(panel, GroupLayout.PREFERRED_SIZE, 370, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
 					.addComponent(panel_7, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap(78, Short.MAX_VALUE))
 		);
+		
+		dPDiaIniMod = new DatePicker();
+		
+		dPDiaFinMod = new DatePicker();
+		
+		tPHoraInicioMod = new TimePicker();
+		
+		tPDiaFinMod = new TimePicker();
+		
+		JLabel lblDiaDeInicio = new JLabel("Dia de inicio");
+		
+		JLabel lblDiaQueAcaba = new JLabel("Dia que acaba");
+		
+		JLabel lblHoraInicial = new JLabel("Hora inicial");
+		
+		JLabel lblHoraFinal = new JLabel("Hora Final");
+		
+		spIntervaloMod = new JSpinner();
+		
+		JLabel lblNewLabel = new JLabel("Intervalo de minutos");
+		GroupLayout gl_panel = new GroupLayout(panel);
+		gl_panel.setHorizontalGroup(
+			gl_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel.createSequentialGroup()
+					.addGap(35)
+					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel.createSequentialGroup()
+							.addComponent(tPDiaFinMod, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED, 131, Short.MAX_VALUE)
+							.addComponent(lblNewLabel)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(spIntervaloMod, GroupLayout.PREFERRED_SIZE, 39, GroupLayout.PREFERRED_SIZE)
+							.addGap(30))
+						.addGroup(gl_panel.createSequentialGroup()
+							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblHoraFinal)
+								.addComponent(lblHoraInicial)
+								.addComponent(lblDiaQueAcaba)
+								.addComponent(lblDiaDeInicio)
+								.addComponent(tPHoraInicioMod, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(dPDiaFinMod, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(dPDiaIniMod, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addContainerGap(153, Short.MAX_VALUE))))
+		);
+		gl_panel.setVerticalGroup(
+			gl_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel.createSequentialGroup()
+					.addGap(26)
+					.addComponent(lblDiaDeInicio)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(dPDiaIniMod, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(24)
+					.addComponent(lblDiaQueAcaba)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(dPDiaFinMod, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(29)
+					.addComponent(lblHoraInicial)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(tPHoraInicioMod, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(31)
+					.addComponent(lblHoraFinal)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(tPDiaFinMod, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(spIntervaloMod, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblNewLabel))
+					.addContainerGap(58, Short.MAX_VALUE))
+		);
+		panel.setLayout(gl_panel);
 		
 		btnModificar = new JButton("Modificar");
 		panel_7.add(btnModificar);
@@ -353,10 +432,10 @@ public class JFAdministrador extends JFrame {
 		
 		tPeriodos = new JTable();
 		scrollPane.setViewportView(tPeriodos);
-		panel_1.setLayout(gl_panel_1);
+		modificarPeriodo.setLayout(gl_modificarPeriodo);
 		
-		JPanel panel_2 = new JPanel();
-		tabbedPane.addTab("Modificar Correos", null, panel_2, null);
+		JPanel modificarCorreo = new JPanel();
+		tabbedPane.addTab("Modificar Correos", null, modificarCorreo, null);
 		
 		JLabel lblModificarCorreos = new JLabel("MODIFICAR CORREOS");
 		lblModificarCorreos.setFont(new Font("Dialog", Font.BOLD, 21));
@@ -365,48 +444,36 @@ public class JFAdministrador extends JFrame {
 		
 		tPBody = new JTextPane();
 		
-		JLabel lbldeseaIncluirEl = new JLabel("¿Desea incluir el archivo adjunto?");
-		
-		chAdjunto = new JCheckBox("");
-		
 		JPanel panel_8 = new JPanel();
-		GroupLayout gl_panel_2 = new GroupLayout(panel_2);
-		gl_panel_2.setHorizontalGroup(
-			gl_panel_2.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_panel_2.createSequentialGroup()
-					.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel_2.createSequentialGroup()
+		GroupLayout gl_modificarCorreo = new GroupLayout(modificarCorreo);
+		gl_modificarCorreo.setHorizontalGroup(
+			gl_modificarCorreo.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_modificarCorreo.createSequentialGroup()
+					.addGroup(gl_modificarCorreo.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_modificarCorreo.createSequentialGroup()
 							.addGap(324)
 							.addComponent(lblModificarCorreos))
-						.addGroup(gl_panel_2.createSequentialGroup()
+						.addGroup(gl_modificarCorreo.createSequentialGroup()
 							.addGap(87)
-							.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
+							.addGroup(gl_modificarCorreo.createParallelGroup(Alignment.LEADING)
 								.addComponent(tPBody, GroupLayout.PREFERRED_SIZE, 756, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblCuerpoDelMensaje)
-								.addGroup(gl_panel_2.createSequentialGroup()
-									.addComponent(lbldeseaIncluirEl)
-									.addGap(18)
-									.addComponent(chAdjunto)))))
+								.addComponent(lblCuerpoDelMensaje))))
 					.addContainerGap(66, Short.MAX_VALUE))
-				.addGroup(gl_panel_2.createSequentialGroup()
+				.addGroup(gl_modificarCorreo.createSequentialGroup()
 					.addContainerGap(588, Short.MAX_VALUE)
 					.addComponent(panel_8, GroupLayout.PREFERRED_SIZE, 309, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap())
 		);
-		gl_panel_2.setVerticalGroup(
-			gl_panel_2.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_2.createSequentialGroup()
+		gl_modificarCorreo.setVerticalGroup(
+			gl_modificarCorreo.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_modificarCorreo.createSequentialGroup()
 					.addGap(26)
 					.addComponent(lblModificarCorreos)
 					.addGap(27)
 					.addComponent(lblCuerpoDelMensaje)
 					.addGap(18)
 					.addComponent(tPBody, GroupLayout.PREFERRED_SIZE, 271, GroupLayout.PREFERRED_SIZE)
-					.addGap(31)
-					.addGroup(gl_panel_2.createParallelGroup(Alignment.TRAILING)
-						.addComponent(lbldeseaIncluirEl)
-						.addComponent(chAdjunto))
-					.addPreferredGap(ComponentPlacement.RELATED, 94, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED, 152, Short.MAX_VALUE)
 					.addComponent(panel_8, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap())
 		);
@@ -414,7 +481,7 @@ public class JFAdministrador extends JFrame {
 		
 		btnRealizarCambios = new JButton("Realizar Cambios");
 		panel_8.add(btnRealizarCambios);
-		panel_2.setLayout(gl_panel_2);
+		modificarCorreo.setLayout(gl_modificarCorreo);
 		
 		
 		
