@@ -43,7 +43,6 @@ public class JFAdministrador extends JFrame {
 
 	public JPanel contentPane;
 	public JButton btnCrear;
-	public JSpinner spReservasNumero;
 	public JTable tPeriodos;
 	public TimePicker tPHoraIni;
 	public JSpinner spReservasMinutos;
@@ -60,6 +59,7 @@ public class JFAdministrador extends JFrame {
 	private TimePicker tPHoraInicioMod;
 	private TimePicker tPDiaFinMod;
 	private JSpinner spIntervaloMod;
+	public TimePicker tPHoraFin;
 
 	/**
 	 * Create the frame.
@@ -161,7 +161,7 @@ public class JFAdministrador extends JFrame {
 		
 		JLabel label_1 = new JLabel("Día de fin");
 		
-		TimePicker tPHoraFin = new TimePicker();
+		tPHoraFin = new TimePicker();
 		tPHoraFin.getComponentTimeTextField().setEditable(false);
 		
 		JLabel label_2 = new JLabel("Hora de inicio");
@@ -242,12 +242,6 @@ public class JFAdministrador extends JFrame {
 		btnCrear = new JButton("Crear");
 		panel_4.add(btnCrear);
 		
-		JLabel lblO = new JLabel("o");
-		
-		JLabel lblIndicaLasReservas = new JLabel("Indica las reservas por dia");
-		
-		spReservasNumero = new JSpinner();
-		
 		JLabel lblIntervaloEntreReservas = new JLabel("Intervalo entre reservas");
 		
 		spReservasMinutos = new JSpinner();
@@ -258,51 +252,22 @@ public class JFAdministrador extends JFrame {
 			gl_panel_3.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_3.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_panel_3.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel_3.createSequentialGroup()
-							.addComponent(lblIntervaloEntreReservas)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(spReservasMinutos, GroupLayout.PREFERRED_SIZE, 47, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(lblMinutos))
-						.addGroup(gl_panel_3.createSequentialGroup()
-							.addGap(183)
-							.addComponent(lblO))
-						.addGroup(gl_panel_3.createSequentialGroup()
-							.addComponent(lblIndicaLasReservas)
-							.addGap(18)
-							.addComponent(spReservasNumero, GroupLayout.PREFERRED_SIZE, 42, GroupLayout.PREFERRED_SIZE)))
+					.addComponent(lblIntervaloEntreReservas)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(spReservasMinutos, GroupLayout.PREFERRED_SIZE, 47, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(lblMinutos)
 					.addContainerGap(38, Short.MAX_VALUE))
 		);
 		gl_panel_3.setVerticalGroup(
 			gl_panel_3.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_panel_3.createSequentialGroup()
-					.addGroup(gl_panel_3.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel_3.createSequentialGroup()
-							.addContainerGap(32, Short.MAX_VALUE)
-							.addGroup(gl_panel_3.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_panel_3.createSequentialGroup()
-									.addGap(2)
-									.addComponent(lblIntervaloEntreReservas))
-								.addGroup(gl_panel_3.createSequentialGroup()
-									.addGap(2)
-									.addComponent(lblMinutos)))
-							.addGap(21)
-							.addComponent(lblO)
-							.addGap(13))
-						.addGroup(gl_panel_3.createSequentialGroup()
-							.addGap(32)
-							.addComponent(spReservasMinutos, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)))
-					.addGroup(gl_panel_3.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel_3.createSequentialGroup()
-							.addGap(5)
-							.addComponent(lblIndicaLasReservas)
-							.addContainerGap())
-						.addGroup(Alignment.TRAILING, gl_panel_3.createSequentialGroup()
-							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-							.addComponent(spReservasNumero, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addContainerGap())))
+				.addGroup(Alignment.LEADING, gl_panel_3.createSequentialGroup()
+					.addGap(51)
+					.addGroup(gl_panel_3.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblIntervaloEntreReservas)
+						.addComponent(spReservasMinutos, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblMinutos))
+					.addContainerGap(64, Short.MAX_VALUE))
 		);
 		panel_3.setLayout(gl_panel_3);
 		crearPeriodo.setLayout(gl_crearPeriodo);
@@ -487,16 +452,16 @@ public class JFAdministrador extends JFrame {
 		
 		// le añado un modelo para que el spinner tenga un valor minimo y uno maximo
 		SpinnerNumberModel modeloSpinner = new SpinnerNumberModel();
-        modeloSpinner.setMaximum(60);
-        modeloSpinner.setMinimum(5);
-        modeloSpinner.setValue(5);
+        modeloSpinner.setMaximum(59);
+        modeloSpinner.setMinimum(1);
+        modeloSpinner.setValue(1);
         spReservasMinutos.setModel(modeloSpinner);
 		
      // le añado un modelo para que el spinner tenga un valor minimo y uno maximo
-        SpinnerNumberModel modeloSpinner2 = new SpinnerNumberModel();
-        modeloSpinner2.setMaximum(72);
-        modeloSpinner2.setMinimum(0);
-        spReservasNumero.setModel(modeloSpinner2);
+//        SpinnerNumberModel modeloSpinner2 = new SpinnerNumberModel();
+//        modeloSpinner2.setMaximum(72);
+//        modeloSpinner2.setMinimum(0);
+//        spReservasNumero.setModel(modeloSpinner2);
         
         
      

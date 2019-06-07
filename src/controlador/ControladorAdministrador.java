@@ -6,11 +6,16 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import baseDeDatos.Modelo;
 import vista.JFAdministrador;
@@ -33,15 +38,36 @@ public class ControladorAdministrador implements ActionListener, MouseListener, 
 		jfad.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		jfad.addWindowListener(this);
 
-		// Añadir las acciones a los botones del formulario padre
+		// Añadir las acciones a los botones del panel de crear periodos
+		jfad.btnAadirCurso.setActionCommand("addCurso");
+		jfad.btnCrear.setActionCommand("addPeriodo");
+		
+		
+		// Ponemos a escuchar las acciones del usuario del panel de crear periodos
+		jfad.btnAadirCurso.addActionListener(this);
+		jfad.btnCrear.addActionListener(this);
 
-		// Ponemos a escuchar las acciones del usuario
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		String comando = e.getActionCommand();
 
+		if (comando.equals("addCurso")) {
+			insertarCurso();
+		} else if (comando.equals("addPeriodo")) {
+			crearPeriodo();
+		} else if (comando.equals("Actualizar")) {
+
+		}
 	}
 
 	public void go() {
 		jfad.setVisible(true);
 	}
+	
+	// ****************************************CREAR PERIODO**********************************
 
 	private void actualizarComboboxCursos() {
 		String curso;
@@ -69,20 +95,44 @@ public class ControladorAdministrador implements ActionListener, MouseListener, 
 			actualizarComboboxCursos();
 	}
 	
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		String comando = e.getActionCommand();
-
-		if (comando.equals("Add")) {
-
-		} else if (comando.equals("Delete")) {
-
-		} else if (comando.equals("Actualizar")) {
-
+	private boolean comprobarCampos() {
+		boolean vacio = true;
+		if (jfad.dPDiaInicio.getDate()!=null && jfad.dPDiaFin.getDate()!= null) {
+			if(jfad.tPHoraIni.getTime()!=null && jfad.tPHoraFin.getTime()!=null) {
+			vacio = false;
+			}else {
+				JOptionPane.showMessageDialog(vista, "Define todas las horas", "Error",JOptionPane.ERROR_MESSAGE);
+			}
+		} else {
+			JOptionPane.showMessageDialog(vista, "Define todos los días", "Error",JOptionPane.ERROR_MESSAGE);
 		}
+		return vacio;
 	}
+	
+	private void crearPeriodo() {
+		Date diaIni;//=Date.valueOf( diaini;
+		Date diaFin;
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("H:mm");
+		LocalTime horaIni;//LocalTime.parse(
+		LocalTime horaFin;
+		LocalTime intervalo;
+		String curso;
+		if (!comprobarCampos()) {
+			diaIni = Date.valueOf(jfad.dPDiaInicio.getDate());
+			diaFin = Date.valueOf(jfad.dPDiaFin.getDate());
+			horaIni = LocalTime.parse(jfad.tPHoraIni.getTime().toString(),dtf);
+			horaFin = LocalTime.parse(jfad.tPHoraFin.getTime().toString(),dtf);
+			if((int) jfad.spReservasMinutos.getValue()<10) {
+				intervalo = LocalTime.parse("0:0"+jfad.spReservasMinutos.getValue(), dtf);
+			} else
+				intervalo = LocalTime.parse("0:"+jfad.spReservasMinutos.getValue(), dtf);
+			curso = jfad.cBCursos.getSelectedItem().toString();
+			
+			
+		} 
+	}
+	
+
 
 	@Override
 	public void mouseClicked(MouseEvent e) {

@@ -98,7 +98,7 @@ public class ControladorRegistro implements ActionListener,WindowListener {
 		int nombre = (jfreg.tFNombre.getText().length());
 		int apellido =(jfreg.tFApellido1.getText().length());
 		int email = (jfreg.tFEmail.getText().length());
-		if(nombre<1  || apellido < 1 || email < 1) {
+		if(nombre<1  && apellido < 1 && email < 1) {
 			vacio=true;	
 		} else {
 			vacio=false;
