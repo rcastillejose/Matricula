@@ -49,6 +49,7 @@ public class JFLogin extends JFrame {
 	 * Create the frame.
 	 */
 	public JFLogin() {
+		setResizable(false);
 	
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

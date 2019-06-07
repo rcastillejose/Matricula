@@ -33,6 +33,7 @@ public class Controlador implements ActionListener {
 
 	public void iniciar() {
 
+		
 		vista.setTitle("Proyecto Matriculas");
 
 		// Añadir las acciones a los botones del formulario padre
@@ -81,8 +82,8 @@ public class Controlador implements ActionListener {
 			jfreg.setLocation((deskSize.width - ifSize.width) / 2, (deskSize.height - ifSize.height) /2);
 			vista.setVisible(false);
 			vista.setLocationRelativeTo(null);	
-			jfreg.setVisible(false);
-		
+			ControladorRegistro controlReg = new ControladorRegistro(vista,modelo,jfreg);
+			controlReg.go();
 	}
 	
 	private void abrirFormularioReservas(Alumno a) {
@@ -147,13 +148,3 @@ public class Controlador implements ActionListener {
 	}
 
 }
-
-
-// como cerrar un frame desde la cruz y que vaya al login
-//addWindowListener(new WindowAdapter() {
-//@Override
-//public void windowClosed(WindowEvent e) {
-//vista.setVisible(true);
-//vista.vaciarCampos();
-//}
-//});

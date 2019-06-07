@@ -6,7 +6,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 
 import baseDeDatos.Modelo;
@@ -26,7 +29,7 @@ public class ControladorAdministrador implements ActionListener, MouseListener, 
 	}
 
 	private void inicializar() {
-
+		actualizarComboboxCursos();
 		jfad.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		jfad.addWindowListener(this);
 
@@ -40,6 +43,33 @@ public class ControladorAdministrador implements ActionListener, MouseListener, 
 		jfad.setVisible(true);
 	}
 
+	private void actualizarComboboxCursos() {
+		String curso;
+		String aux;
+		DefaultComboBoxModel dcbm = new DefaultComboBoxModel();
+		dcbm.removeAllElements();
+
+		LinkedHashSet<String> resultado = modelo.obtenerCursos();
+		Iterator it = resultado.iterator();
+		while(it.hasNext()) {
+			curso =it.next().toString();
+			aux = curso.substring(0,4);
+			dcbm.addElement(aux);
+		}
+		jfad.cBCursos.setModel(dcbm);
+		System.out.println(dcbm.getSelectedItem());
+	}
+	
+	private void insertarCurso() {
+		LinkedHashSet<String> resultado = modelo.obtenerCursos();
+		Iterator it = resultado.iterator();
+		int curso;
+		curso = Integer.parseInt(it.next().toString())+1;
+		if(modelo.insertarCurso(curso))
+			actualizarComboboxCursos();
+	}
+	
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub

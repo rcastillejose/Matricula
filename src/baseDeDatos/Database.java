@@ -103,7 +103,7 @@ public class Database {
 	 * @param values valores que se van a insertar
 	 * @return devuelve un booleano que indica si se han podido insertar o no
 	 */
-	protected boolean insertar(String fields, String table, String values) {
+	protected boolean insert(String fields, String table, String values) {
 		boolean insertado = false;
 		String sql = "INSERT INTO "+ table +  " ( " + fields + " ) VALUES ("+ values + ")";
 		

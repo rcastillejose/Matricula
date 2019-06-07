@@ -1,6 +1,6 @@
 package baseDeDatos;
 
-import java.awt.Image;
+
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -9,15 +9,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.TreeSet;
-
 import modelo.Alumno;
-import modelo.Periodo;
 import modelo.Reserva;
 
 
@@ -70,10 +67,10 @@ public class Modelo extends Database {
 		}
 	}
 	
-	public ArrayList<String> obtenerCursos(){
-		ArrayList<String> resultado = new ArrayList<String>();
+	public LinkedHashSet<String> obtenerCursos(){
+		LinkedHashSet<String> resultado = new LinkedHashSet<String>();
 		
-		String query = "SELECT cursoYear FROM Curso";
+		String query = "SELECT cursoYear FROM Curso ORDER BY cursoYear DESC";
 		
 		System.out.print(query);
 		try(Connection con = conectar();
@@ -161,7 +158,51 @@ public class Modelo extends Database {
 	}
 	
 	public boolean reservar(String email, LocalDate dia, LocalTime hora) {
-		return update("Reserva","email="+"'"+email+"'","reserva_dia='"+dia+"' AND reserva_hora='"+hora+"'");
+		return update("email="+"'"+email+"'","Reserva","reserva_dia='"+dia+"' AND reserva_hora='"+hora+"'");
+		
+	}
+	
+	public boolean modificarReserva(String email, LocalDate dia, LocalTime hora) {
+		boolean actualizado =false;
+		actualizado=update("email=NULL","Reserva","email='"+email+"'");
+		if(actualizado==true)
+			update("email="+"'"+email+"'","Reserva","reserva_dia='"+dia+"' AND reserva_hora='"+hora+"'");
+		
+		return actualizado;
+
+	}
+	
+	public boolean eliminarReserva(String email) {
+		return update("email=NULL","Reserva","email='"+email+"'");
+	}
+	
+	public String obtenerMensajeCorreo() {
+		String sql = "SELECT Cuerpo FROM Mensaje WHERE tipoMensaje='correo'"; 
+		try(Connection con = conectar(); 
+				Statement stm=con.createStatement();
+				ResultSet rs = stm.executeQuery(sql);){
+			
+			rs.next();
+			return rs.getString(1);
+				
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public boolean insertarAlumno(Alumno a,String passwd) {
+		
+		return insert("nombre,apellidos,email,login,passwd","Alumno","'"+a.getNombre()+"','"+a.getApellidos()+"','"+a.getEmail()+"','"+a.getLogin()+"',PASSWORD('"+passwd+"')");
+		
+	}
+	
+	//****************************************************************PARA ADMINISTRADOR********************************
+	
+	public boolean insertarCurso(int curso) {
+		
+		return insert("cursoYear","Curso",String.valueOf(curso));
 		
 	}
 	

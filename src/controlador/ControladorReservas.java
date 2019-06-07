@@ -6,6 +6,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
+import java.io.InputStream;
 import java.sql.Date;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
@@ -14,11 +16,15 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
@@ -29,9 +35,14 @@ import com.github.lgooddatepicker.zinternaltools.CalendarSelectionEvent;
 import com.github.lgooddatepicker.zinternaltools.YearMonthChangeEvent;
 
 import baseDeDatos.Modelo;
+import configuracion.ConfiguracionSegura;
+import gmail.GmailTool;
 import modelo.Alumno;
 import modelo.Periodo;
 import modelo.Reserva;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
 import vista.JFLogin;
 import vista.JFReservar;
 
@@ -71,6 +82,7 @@ public class ControladorReservas implements CalendarListener, ActionListener, Mo
 			jfre.btnEliminarReserva.setVisible(false);
 			reserva=false;
 		}
+		jfre.btnReservar.setVisible(false);
 		jfre.lblBienvenido.setText("Bienvenido "+a.getNombre());
 		
 		
@@ -100,6 +112,8 @@ public class ControladorReservas implements CalendarListener, ActionListener, Mo
 			iniciarCalendario();
 		} else if(command.equals("reservar")) {
 			crearReserva();
+		} else if(command.equals("eliminarReserva")) {
+			eliminarReserva();
 		}
 	}
 	
@@ -109,15 +123,17 @@ public class ControladorReservas implements CalendarListener, ActionListener, Mo
 		DefaultComboBoxModel dcbm = new DefaultComboBoxModel();
 		dcbm.removeAllElements();
 
-		ArrayList<String> resultado = modelo.obtenerCursos();
-		for (int i = 0; i<resultado.size();i++) {
-			curso =resultado.get(i);
+		LinkedHashSet<String> resultado = modelo.obtenerCursos();
+		Iterator it = resultado.iterator();
+		while(it.hasNext()) {
+			curso =it.next().toString();
 			aux = curso.substring(0,4);
 			dcbm.addElement(aux);
 		}
 		jfre.cBCurso.setModel(dcbm);
 		System.out.println(dcbm.getSelectedItem());
 	}
+	
 	
 	private void iniciarCalendario() {
 
@@ -145,26 +161,91 @@ public class ControladorReservas implements CalendarListener, ActionListener, Mo
 	}
 	
 	private void crearReserva() {
-		Date dia = Date.valueOf((String)jfre.tReservas.getValueAt(jfre.tReservas.getSelectedRow(), 1));
-		Time hora = Time.valueOf(jfre.tReservas.getValueAt(jfre.tReservas.getSelectedRow(), 2).toString());
-		System.out.println(dia);
-		System.out.println(hora);
+		boolean cambio=false;
+		System.out.println(jfre.tReservas.getValueAt(jfre.tReservas.getSelectedRow(), 1).toString());
+		System.out.println(jfre.tReservas.getValueAt(jfre.tReservas.getSelectedRow(), 2).toString());
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("H:mm");
+		LocalTime hora = LocalTime.parse(jfre.tReservas.getValueAt(jfre.tReservas.getSelectedRow(), 2).toString(),dtf);
+		Date dia=Date.valueOf(jfre.tReservas.getValueAt(jfre.tReservas.getSelectedRow(), 1).toString());
+		//Time hora = Time.valueOf(jfre.tReservas.getValueAt(jfre.tReservas.getSelectedRow(), 2).toString()+":00");
+		
+		if(reserva) {
+			int opcion = JOptionPane.showConfirmDialog(vista, "¿De verdad desea modificar su reserva?",
+					"Confirmacion", JOptionPane.YES_NO_OPTION);
+			if (opcion == JOptionPane.YES_OPTION) {
+				cambio=modelo.modificarReserva(a.getEmail(), dia.toLocalDate(), hora);
+			}
+			
+			if(cambio) {
+				inicializar();
+				JOptionPane.showMessageDialog(vista, "Se ha modificado su reserva, revisa tu correo para mas información","Info",JOptionPane.INFORMATION_MESSAGE);
+				mandarCorreo();
+			} else {
+				JOptionPane.showMessageDialog(vista, "No se ha podido modificar su reserva","Error",JOptionPane.ERROR_MESSAGE);
+			}
+		} else {
+			cambio=modelo.reservar(a.getEmail(), dia.toLocalDate(), hora);
+			if(cambio) {
+				inicializar();
+				JOptionPane.showMessageDialog(vista, "Se ha creado su reserva, revisa tu correo para mas información","Info",JOptionPane.INFORMATION_MESSAGE);
+				
+			} else {
+				JOptionPane.showMessageDialog(vista, "No se ha podido crear su reserva","Error",JOptionPane.ERROR_MESSAGE);
+			}
+		}
 	}
 	
-	private void modificarReserva() {
-		
-	}
 	
 	private void eliminarReserva() {
-		
+		int opcion = JOptionPane.showConfirmDialog(vista, "Desea eliminar su reserva","Info",JOptionPane.INFORMATION_MESSAGE);
+		if(opcion==JOptionPane.YES_OPTION) {
+			modelo.eliminarReserva(a.getEmail());
+			inicializar();
+		} 
 	}
+	
+	public void mandarCorreo() {
+		String cuerpo = modelo.obtenerMensajeCorreo();
+		String to = a.getEmail();
+		
+		String from = (new ConfiguracionSegura()).getMailFrom();
+		String subject = "Confirmación de reserva";
+		
+		String reportUrl = "/reports/correo.jasper";
+		
+		InputStream reportFile = null;
+		
+		reportFile = getClass().getResourceAsStream(reportUrl);
+		
+		Map<String, Object> parametros = new HashMap<String,Object>();
+			parametros.put("email", a.getEmail());
+		
+		
+		try {
+			JasperPrint print = JasperFillManager.fillReport(reportFile,  parametros, modelo.conectar());
+			JasperExportManager.exportReportToPdfFile(print,"reserva.pdf");
+	
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		ArrayList<File> files = new ArrayList<File>();
+		File envio = new File("reserva.pdf");
+		files.add(envio);
+		
+		GmailTool.sendHtmlWithAttachment(to, from, subject, cuerpo, files);
+		envio.delete();
+	
+	}
+	
+	
 	
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		// TODO Auto-generated method stub
 		
 		if (jfre.tReservas.getSelectedRow()!=-1) {
-			
+			jfre.btnReservar.setVisible(true);
 		}
 	}
 	

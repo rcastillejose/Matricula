@@ -32,7 +32,7 @@ public class Password {
 		return generarPassWord(NUMEROS,4);
 	}
 	
-	private static String generarPassWord(String cadena, int cantidad) {
+	public static String generarPassWord(String cadena, int cantidad) {
 		String passwd="";
 		for(int i = 0; i < cantidad ; i++) {
 			passwd += cadena.charAt((int)(Math.random()*cadena.length()));

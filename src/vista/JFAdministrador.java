@@ -36,6 +36,8 @@ import javax.swing.JTextPane;
 import javax.swing.JCheckBox;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.border.LineBorder;
+import javax.swing.JComboBox;
 
 public class JFAdministrador extends JFrame {
 
@@ -52,22 +54,8 @@ public class JFAdministrador extends JFrame {
 	public JButton btnRealizarCambios;
 	public DatePicker dPDiaInicio;
 	public DatePicker dPDiaFin;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					JFAdministrador frame = new JFAdministrador();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	public JButton btnAadirCurso;
+	public JComboBox cBCursos;
 
 	/**
 	 * Create the frame.
@@ -98,7 +86,10 @@ public class JFAdministrador extends JFrame {
 		JPanel panel_4 = new JPanel();
 		
 		JPanel panel_5 = new JPanel();
-		panel_5.setBorder(new TitledBorder(null, "Periodo de Desarrolo", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_5.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Periodo de Desarrollo", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
+		
+		JPanel panel_9 = new JPanel();
+		panel_9.setBorder(new TitledBorder(null, "Cursos", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.TRAILING)
@@ -111,10 +102,12 @@ public class JFAdministrador extends JFrame {
 							.addGap(53)
 							.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
 								.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 369, GroupLayout.PREFERRED_SIZE)
-								.addComponent(panel_5, GroupLayout.PREFERRED_SIZE, 801, GroupLayout.PREFERRED_SIZE)))
-						.addGroup(gl_panel.createSequentialGroup()
-							.addGap(270)
-							.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 368, GroupLayout.PREFERRED_SIZE)))
+								.addGroup(gl_panel.createParallelGroup(Alignment.LEADING, false)
+									.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
+										.addComponent(panel_9, GroupLayout.PREFERRED_SIZE, 290, GroupLayout.PREFERRED_SIZE)
+										.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+										.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 368, GroupLayout.PREFERRED_SIZE))
+									.addComponent(panel_5, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 801, GroupLayout.PREFERRED_SIZE)))))
 					.addContainerGap(55, Short.MAX_VALUE))
 		);
 		gl_panel.setVerticalGroup(
@@ -125,11 +118,40 @@ public class JFAdministrador extends JFrame {
 					.addGap(37)
 					.addComponent(panel_5, GroupLayout.PREFERRED_SIZE, 223, GroupLayout.PREFERRED_SIZE)
 					.addGap(18)
-					.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(69)
-					.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 39, GroupLayout.PREFERRED_SIZE)
+					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel.createSequentialGroup()
+							.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addGap(69)
+							.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 39, GroupLayout.PREFERRED_SIZE))
+						.addComponent(panel_9, GroupLayout.PREFERRED_SIZE, 148, GroupLayout.PREFERRED_SIZE))
 					.addContainerGap(13, Short.MAX_VALUE))
 		);
+		
+		cBCursos = new JComboBox();
+		
+		btnAadirCurso = new JButton("Añadir Curso");
+		GroupLayout gl_panel_9 = new GroupLayout(panel_9);
+		gl_panel_9.setHorizontalGroup(
+			gl_panel_9.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_9.createSequentialGroup()
+					.addGap(34)
+					.addComponent(cBCursos, GroupLayout.PREFERRED_SIZE, 83, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(163, Short.MAX_VALUE))
+				.addGroup(Alignment.TRAILING, gl_panel_9.createSequentialGroup()
+					.addContainerGap(152, Short.MAX_VALUE)
+					.addComponent(btnAadirCurso)
+					.addContainerGap())
+		);
+		gl_panel_9.setVerticalGroup(
+			gl_panel_9.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_9.createSequentialGroup()
+					.addGap(27)
+					.addComponent(cBCursos, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+					.addComponent(btnAadirCurso)
+					.addContainerGap())
+		);
+		panel_9.setLayout(gl_panel_9);
 		
 		JLabel label = new JLabel("Día de inicio");
 		
