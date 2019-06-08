@@ -163,13 +163,16 @@ public class ControladorAdministrador implements ActionListener, MouseListener, 
 	}
 
 	private void rellenarCampos() {
-		Periodo p = modelo.obtenerPeriodo(Integer.parseInt(jfad.tPeriodos.getValueAt(jfad.tPeriodos.getSelectedRow(), 1).toString()),
-				Integer.parseInt(jfad.cBCursosMod.toString()));
+		
+		Periodo p = modelo.obtenerPeriodo(Integer.parseInt(jfad.tPeriodos.getValueAt(jfad.tPeriodos.getSelectedRow(), 0).toString()));
 		jfad.dPDiaIniMod.setDate(p.getDia_inicio());
 		jfad.dPDiaFinMod.setDate(p.getDia_fin());
 		jfad.tPHoraInicioMod.setTime(p.getHora_inicio());
 		jfad.tPHoraFinMod.setTime(p.getHora_fin());
-		jfad.spIntervaloMod.setValue(p.getIntervalo());
+		String intervalo = p.getIntervalo().toString();
+		System.out.println(intervalo);
+		int intervalo2=Integer.parseInt(intervalo.substring(3));
+		jfad.spIntervaloMod.setValue(intervalo2);
 		if(p.getHabilitado())
 		jfad.checkHabilitado.setSelected(true);
 		

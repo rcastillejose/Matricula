@@ -10,7 +10,7 @@ import java.sql.Statement;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.Year;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -244,37 +244,42 @@ public class Modelo extends Database {
 		return resultadoSalida;
 	}
 	 
-	public Periodo obtenerPeriodo(int idPeriodo, int curso) {
+	public Periodo obtenerPeriodo(int idPeriodo) {
 		Periodo resultado=null;
-		String query = "SELECT idPeriodo,dia_inicio,dia_fin,hora_inicio,hora_fin,intervalo,habilitado FROM Periodo WHERE idPeriodo = "+idPeriodo;
+		String query = "SELECT idPeriodo,dia_inicio,dia_fin,hora_inicio,hora_fin,intervalo,habilitado,cursoYear FROM Periodo WHERE idPeriodo = "+idPeriodo;
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("H:mm");
 		LocalDate dia_inicio;
 		LocalDate dia_fin;
 		LocalTime hora_inicio;
 		LocalTime hora_fin;
 		LocalTime intervalo;
 		boolean habilitado;
+		String auxCurso;
+		int cursoYear;
 		
 		try (Connection con = conectar();
 				Statement stm = con.createStatement();
 				ResultSet rs = stm.executeQuery(query);){
 			
 			
-			while(rs.next()) {
+			rs.next();
 			
-				dia_inicio = rs.getDate(1).toLocalDate();
-				dia_fin = rs.getDate(2).toLocalDate();
-				hora_inicio = rs.getTime(3).toLocalTime();
-				hora_fin  = rs.getTime(4).toLocalTime();
-				intervalo = rs.getTime(5).toLocalTime();
-				habilitado = rs.getBoolean(6);
+				dia_inicio = rs.getDate("dia_inicio").toLocalDate();
+				dia_fin = rs.getDate("dia_fin").toLocalDate();
+				hora_inicio = LocalTime.parse(String.valueOf(rs.getTime("hora_inicio").toLocalTime()), dtf);
+				hora_fin  =LocalTime.parse(String.valueOf(rs.getTime("hora_fin").toLocalTime()), dtf);
+				intervalo = LocalTime.parse(String.valueOf(rs.getTime("intervalo").toLocalTime()), dtf);
+				habilitado = rs.getBoolean("habilitado");
+				auxCurso =rs.getString("cursoYear").toString();
+				cursoYear=Integer.parseInt(auxCurso.substring(0,4));
 				
 				
-				resultado= new Periodo(idPeriodo,dia_inicio,dia_fin,hora_inicio,hora_fin,intervalo,habilitado,curso);
+				resultado= new Periodo(idPeriodo,dia_inicio,dia_fin,hora_inicio,hora_fin,intervalo,habilitado,cursoYear);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		return resultado;
 	}
 	
