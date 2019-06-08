@@ -54,12 +54,14 @@ public class JFAdministrador extends JFrame {
 	public DatePicker dPDiaFin;
 	public JButton btnAadirCurso;
 	public JComboBox cBCursos;
-	private DatePicker dPDiaIniMod;
-	private DatePicker dPDiaFinMod;
-	private TimePicker tPHoraInicioMod;
-	private TimePicker tPDiaFinMod;
-	private JSpinner spIntervaloMod;
+	public DatePicker dPDiaIniMod;
+	public DatePicker dPDiaFinMod;
+	public TimePicker tPHoraInicioMod;
+	public TimePicker tPHoraFinMod;
+	public JSpinner spIntervaloMod;
 	public TimePicker tPHoraFin;
+	public JCheckBox checkHabilitado;
+	public JComboBox cBCursosMod;
 
 	/**
 	 * Create the frame.
@@ -284,6 +286,10 @@ public class JFAdministrador extends JFrame {
 		JPanel panel_7 = new JPanel();
 		
 		JPanel panel = new JPanel();
+		
+		JLabel lblCurso = new JLabel("Curso");
+		
+		cBCursosMod = new JComboBox();
 		GroupLayout gl_modificarPeriodo = new GroupLayout(modificarPeriodo);
 		gl_modificarPeriodo.setHorizontalGroup(
 			gl_modificarPeriodo.createParallelGroup(Alignment.TRAILING)
@@ -297,9 +303,16 @@ public class JFAdministrador extends JFrame {
 					.addContainerGap(335, Short.MAX_VALUE))
 				.addGroup(gl_modificarPeriodo.createSequentialGroup()
 					.addContainerGap(58, Short.MAX_VALUE)
-					.addComponent(panel_6, GroupLayout.PREFERRED_SIZE, 397, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
-					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)
+					.addGroup(gl_modificarPeriodo.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_modificarPeriodo.createSequentialGroup()
+							.addComponent(lblCurso)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(cBCursosMod, GroupLayout.PREFERRED_SIZE, 93, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_modificarPeriodo.createSequentialGroup()
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(panel_6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(panel, GroupLayout.PREFERRED_SIZE, 363, GroupLayout.PREFERRED_SIZE)))
 					.addGap(36))
 		);
 		gl_modificarPeriodo.setVerticalGroup(
@@ -307,13 +320,17 @@ public class JFAdministrador extends JFrame {
 				.addGroup(gl_modificarPeriodo.createSequentialGroup()
 					.addGap(21)
 					.addComponent(lblModififarPeriodo)
-					.addGap(40)
+					.addGap(7)
+					.addGroup(gl_modificarPeriodo.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblCurso)
+						.addComponent(cBCursosMod, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
 					.addGroup(gl_modificarPeriodo.createParallelGroup(Alignment.LEADING)
-						.addComponent(panel_6, GroupLayout.PREFERRED_SIZE, 370, GroupLayout.PREFERRED_SIZE)
-						.addComponent(panel, GroupLayout.PREFERRED_SIZE, 370, GroupLayout.PREFERRED_SIZE))
+						.addComponent(panel, GroupLayout.PREFERRED_SIZE, 370, GroupLayout.PREFERRED_SIZE)
+						.addComponent(panel_6, GroupLayout.PREFERRED_SIZE, 370, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
 					.addComponent(panel_7, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(78, Short.MAX_VALUE))
+					.addContainerGap(69, Short.MAX_VALUE))
 		);
 		
 		dPDiaIniMod = new DatePicker();
@@ -322,7 +339,7 @@ public class JFAdministrador extends JFrame {
 		
 		tPHoraInicioMod = new TimePicker();
 		
-		tPDiaFinMod = new TimePicker();
+		tPHoraFinMod = new TimePicker();
 		
 		JLabel lblDiaDeInicio = new JLabel("Dia de inicio");
 		
@@ -335,29 +352,37 @@ public class JFAdministrador extends JFrame {
 		spIntervaloMod = new JSpinner();
 		
 		JLabel lblNewLabel = new JLabel("Intervalo de minutos");
+		
+		JLabel lblHabilitado = new JLabel("Habilitado");
+		
+		checkHabilitado = new JCheckBox("");
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel.createSequentialGroup()
 					.addGap(35)
 					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel.createSequentialGroup()
-							.addComponent(tPDiaFinMod, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED, 131, Short.MAX_VALUE)
-							.addComponent(lblNewLabel)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(spIntervaloMod, GroupLayout.PREFERRED_SIZE, 39, GroupLayout.PREFERRED_SIZE)
-							.addGap(30))
+						.addComponent(lblHoraFinal)
+						.addComponent(lblHoraInicial)
+						.addComponent(lblDiaQueAcaba)
+						.addComponent(lblDiaDeInicio)
+						.addComponent(dPDiaFinMod, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(dPDiaIniMod, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addGroup(gl_panel.createSequentialGroup()
 							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblHoraFinal)
-								.addComponent(lblHoraInicial)
-								.addComponent(lblDiaQueAcaba)
-								.addComponent(lblDiaDeInicio)
 								.addComponent(tPHoraInicioMod, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(dPDiaFinMod, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(dPDiaIniMod, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-							.addContainerGap(153, Short.MAX_VALUE))))
+								.addComponent(tPHoraFinMod, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_panel.createSequentialGroup()
+									.addGap(28)
+									.addComponent(lblHabilitado)
+									.addComponent(checkHabilitado))
+								.addGroup(gl_panel.createSequentialGroup()
+									.addPreferredGap(ComponentPlacement.UNRELATED)
+									.addComponent(lblNewLabel)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(spIntervaloMod, GroupLayout.PREFERRED_SIZE, 39, GroupLayout.PREFERRED_SIZE)))))
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		gl_panel.setVerticalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
@@ -373,14 +398,19 @@ public class JFAdministrador extends JFrame {
 					.addGap(29)
 					.addComponent(lblHoraInicial)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(tPHoraInicioMod, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(31)
-					.addComponent(lblHoraFinal)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(tPDiaFinMod, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(spIntervaloMod, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblNewLabel))
+						.addComponent(tPHoraInicioMod, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblNewLabel)
+						.addComponent(spIntervaloMod, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(31)
+					.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
+						.addGroup(gl_panel.createSequentialGroup()
+							.addComponent(lblHoraFinal)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+								.addComponent(tPHoraFinMod, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblHabilitado)))
+						.addComponent(checkHabilitado))
 					.addContainerGap(58, Short.MAX_VALUE))
 		);
 		panel.setLayout(gl_panel);
@@ -456,6 +486,7 @@ public class JFAdministrador extends JFrame {
         modeloSpinner.setMinimum(1);
         modeloSpinner.setValue(1);
         spReservasMinutos.setModel(modeloSpinner);
+        spIntervaloMod.setModel(modeloSpinner);
 		
      // le añado un modelo para que el spinner tenga un valor minimo y uno maximo
 //        SpinnerNumberModel modeloSpinner2 = new SpinnerNumberModel();

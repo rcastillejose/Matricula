@@ -7,17 +7,23 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.sql.Date;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.Map;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 import baseDeDatos.Modelo;
+import modelo.Periodo;
+import modelo.Reserva;
 import vista.JFAdministrador;
 import vista.JFLogin;
 
@@ -35,18 +41,21 @@ public class ControladorAdministrador implements ActionListener, MouseListener, 
 
 	private void inicializar() {
 		actualizarComboboxCursos();
+		actualizarTablaPeriodos();
 		jfad.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		jfad.addWindowListener(this);
 
 		// Añadir las acciones a los botones del panel de crear periodos
 		jfad.btnAadirCurso.setActionCommand("addCurso");
 		jfad.btnCrear.setActionCommand("addPeriodo");
-		
+		jfad.cBCursosMod.setActionCommand("actualizarTabla");
 		
 		// Ponemos a escuchar las acciones del usuario del panel de crear periodos
 		jfad.btnAadirCurso.addActionListener(this);
 		jfad.btnCrear.addActionListener(this);
+		jfad.cBCursosMod.addActionListener(this);
 
+		jfad.tPeriodos.addMouseListener(this);
 	}
 	
 	@Override
@@ -58,7 +67,8 @@ public class ControladorAdministrador implements ActionListener, MouseListener, 
 			insertarCurso();
 		} else if (comando.equals("addPeriodo")) {
 			crearPeriodo();
-		} else if (comando.equals("Actualizar")) {
+		} else if (comando.equals("actualizarTabla")) {
+			actualizarTablaPeriodos();
 
 		}
 	}
@@ -70,28 +80,30 @@ public class ControladorAdministrador implements ActionListener, MouseListener, 
 	// ****************************************CREAR PERIODO**********************************
 
 	private void actualizarComboboxCursos() {
-		String curso;
-		String aux;
+		int curso;
+		
 		DefaultComboBoxModel dcbm = new DefaultComboBoxModel();
 		dcbm.removeAllElements();
 
-		LinkedHashSet<String> resultado = modelo.obtenerCursos();
+		LinkedHashSet<Integer> resultado = modelo.obtenerCursos();
 		Iterator it = resultado.iterator();
 		while(it.hasNext()) {
-			curso =it.next().toString();
-			aux = curso.substring(0,4);
-			dcbm.addElement(aux);
+			curso =(int) it.next();
+			
+			dcbm.addElement(curso);
 		}
 		jfad.cBCursos.setModel(dcbm);
+		jfad.cBCursosMod.setModel(dcbm);
 		System.out.println(dcbm.getSelectedItem());
 	}
 	
 	private void insertarCurso() {
-		LinkedHashSet<String> resultado = modelo.obtenerCursos();
+		LinkedHashSet<Integer> resultado = modelo.obtenerCursos();
 		Iterator it = resultado.iterator();
-		int curso;
-		curso = Integer.parseInt(it.next().toString())+1;
-		if(modelo.insertarCurso(curso))
+		int curso=(int) it.next();
+		
+		int cursoINT = curso+1;
+		if(modelo.insertarCurso(cursoINT))
 			actualizarComboboxCursos();
 	}
 	
@@ -110,34 +122,67 @@ public class ControladorAdministrador implements ActionListener, MouseListener, 
 	}
 	
 	private void crearPeriodo() {
-		Date diaIni;//=Date.valueOf( diaini;
+		Date diaIni;
 		Date diaFin;
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("H:mm");
-		LocalTime horaIni;//LocalTime.parse(
-		LocalTime horaFin;
-		LocalTime intervalo;
-		String curso;
+		Time horaIni;
+		Time horaFin;
+		Time intervalo;
+		int curso;
+	
 		if (!comprobarCampos()) {
 			diaIni = Date.valueOf(jfad.dPDiaInicio.getDate());
 			diaFin = Date.valueOf(jfad.dPDiaFin.getDate());
-			horaIni = LocalTime.parse(jfad.tPHoraIni.getTime().toString(),dtf);
-			horaFin = LocalTime.parse(jfad.tPHoraFin.getTime().toString(),dtf);
+			horaIni = Time.valueOf(LocalTime.parse(jfad.tPHoraIni.getTime().toString(),dtf));
+			horaFin = Time.valueOf(LocalTime.parse(jfad.tPHoraFin.getTime().toString(),dtf));
 			if((int) jfad.spReservasMinutos.getValue()<10) {
-				intervalo = LocalTime.parse("0:0"+jfad.spReservasMinutos.getValue(), dtf);
+				intervalo = Time.valueOf(LocalTime.parse("0:0"+jfad.spReservasMinutos.getValue(), dtf));
 			} else
-				intervalo = LocalTime.parse("0:"+jfad.spReservasMinutos.getValue(), dtf);
-			curso = jfad.cBCursos.getSelectedItem().toString();
-			
-			
+				intervalo = Time.valueOf(LocalTime.parse("0:"+jfad.spReservasMinutos.getValue(), dtf));
+			curso = Integer.parseInt(jfad.cBCursos.getSelectedItem().toString());
+						System.out.println(diaIni.toString()+ diaFin.toString()+ horaIni.toString()+ horaFin.toString()+ intervalo.toString()+ curso);
+			if(modelo.addPeriodo(diaIni,diaFin,horaIni,horaFin,intervalo,curso)) {
+				JOptionPane.showMessageDialog(vista, "Periodo creado con exito", "Info",JOptionPane.INFORMATION_MESSAGE);
+			}
 		} 
 	}
+	//***************************************************MODIFICAR PERIODO
 	
+	
+	private void actualizarTablaPeriodos() {
+		Map<Integer,Periodo> periodos = modelo.obtenerPeriodos(Integer.parseInt(jfad.cBCursosMod.getSelectedItem().toString()));
+		DefaultTableModel dtm = new DefaultTableModel(new Object[][] {},
+				new String[] { "Periodo","Dia inicio", "Dia fin", "Hora inicio","Hora_fin","Habilitado"});
 
+		for (Integer key : periodos.keySet()) {
+
+			dtm.addRow(new Object[] { key, periodos.get(key).getDia_inicio(), periodos.get(key).getDia_fin(),
+					periodos.get(key).getHora_inicio(),periodos.get(key).getHora_fin(),periodos.get(key).getHabilitado()});
+		}
+		jfad.tPeriodos.setModel(dtm);
+	}
+
+	private void rellenarCampos() {
+		Periodo p = modelo.obtenerPeriodo(Integer.parseInt(jfad.tPeriodos.getValueAt(jfad.tPeriodos.getSelectedRow(), 1).toString()),
+				Integer.parseInt(jfad.cBCursosMod.toString()));
+		jfad.dPDiaIniMod.setDate(p.getDia_inicio());
+		jfad.dPDiaFinMod.setDate(p.getDia_fin());
+		jfad.tPHoraInicioMod.setTime(p.getHora_inicio());
+		jfad.tPHoraFinMod.setTime(p.getHora_fin());
+		jfad.spIntervaloMod.setValue(p.getIntervalo());
+		if(p.getHabilitado())
+		jfad.checkHabilitado.setSelected(true);
+		
+		
+	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
 
+		if (jfad.tPeriodos.getSelectedRow()!=-1) {
+			rellenarCampos();
+		}
 	}
 
 	@Override

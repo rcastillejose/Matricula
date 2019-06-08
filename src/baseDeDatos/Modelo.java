@@ -7,14 +7,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import modelo.Alumno;
+import modelo.Periodo;
 import modelo.Reserva;
 
 
@@ -67,8 +70,8 @@ public class Modelo extends Database {
 		}
 	}
 	
-	public LinkedHashSet<String> obtenerCursos(){
-		LinkedHashSet<String> resultado = new LinkedHashSet<String>();
+	public LinkedHashSet<Integer> obtenerCursos(){
+		LinkedHashSet<Integer> resultado = new LinkedHashSet<Integer>();
 		
 		String query = "SELECT cursoYear FROM Curso ORDER BY cursoYear DESC";
 		
@@ -78,7 +81,7 @@ public class Modelo extends Database {
 				ResultSet rs = stm.executeQuery(query)){
 						
 			while (rs.next()) {
-				resultado.add(rs.getString("cursoYear"));
+				resultado.add(rs.getInt("cursoYear"));
 			}
 			
 			
@@ -92,7 +95,7 @@ public class Modelo extends Database {
 	}
 	
 	
-	public HashSet<LocalDate> obtenerDias(String curso) {
+	public HashSet<LocalDate> obtenerDias(int curso) {
 		HashSet<LocalDate> resultado = new HashSet<LocalDate>();
 		String query = "select r.reserva_dia from Reserva r join Periodo p on(r.idPeriodo=r.idPeriodo) " + 
 				"where p.cursoYear="+curso+" AND p.habilitado = 1 group by r.reserva_dia";
@@ -173,7 +176,7 @@ public class Modelo extends Database {
 	}
 	
 	public boolean eliminarReserva(String email) {
-		return update("email=NULL","Reserva","email='"+email+"'");
+		return anularReserva(email);
 	}
 	
 	public String obtenerMensajeCorreo() {
@@ -201,12 +204,79 @@ public class Modelo extends Database {
 	//****************************************************************PARA ADMINISTRADOR********************************
 	
 	public boolean insertarCurso(int curso) {
-		
 		return insert("cursoYear","Curso",String.valueOf(curso));
 		
 	}
 	
+	public boolean addPeriodo(Date diaInicio,Date diaFin,Time horaInicio,Time horaFin, Time intervalo, int cursoYear) {
+		return crearPeriodo(diaInicio,diaFin,horaInicio,horaFin,intervalo,cursoYear);
+	}
+	
+	public Map<Integer,Periodo> obtenerPeriodos(int curso){
+		
+		Map<Integer,Periodo> resultadoSalida = new LinkedHashMap<Integer,Periodo>();
+		Map<Integer,ArrayList<Object>> resultadoBD=new LinkedHashMap<Integer,ArrayList<Object>>();
+		
+		resultadoBD = select("idPeriodo,dia_inicio,dia_fin,hora_inicio,hora_fin,intervalo,habilitado","Periodo","cursoYear="+curso+" ORDER BY idPeriodo DESC","idPeriodo");
+		
+		LocalDate dia_inicio;
+		LocalDate dia_fin;
+		LocalTime hora_inicio;
+		LocalTime hora_fin;
+		LocalTime intervalo;
+		boolean habilitado;
+		
+	
+		
+		for(Integer key : resultadoBD.keySet()) {
+			
+			dia_inicio = LocalDate.parse(String.valueOf(resultadoBD.get(key).get(1)));
+			dia_fin = LocalDate.parse(String.valueOf(resultadoBD.get(key).get(2)));
+			hora_inicio = LocalTime.parse(String.valueOf(resultadoBD.get(key).get(3)));
+			hora_fin = LocalTime.parse(String.valueOf(resultadoBD.get(key).get(4)));
+			intervalo = LocalTime.parse(String.valueOf(resultadoBD.get(key).get(5)));
+			habilitado =(boolean) resultadoBD.get(key).get(6);
+			
+			
+			resultadoSalida.put(key, new Periodo(key,dia_inicio,dia_fin,hora_inicio,hora_fin,intervalo,habilitado,curso));
+		}
+		
+		return resultadoSalida;
+	}
 	 
+	public Periodo obtenerPeriodo(int idPeriodo, int curso) {
+		Periodo resultado=null;
+		String query = "SELECT idPeriodo,dia_inicio,dia_fin,hora_inicio,hora_fin,intervalo,habilitado FROM Periodo WHERE idPeriodo = "+idPeriodo;
+		LocalDate dia_inicio;
+		LocalDate dia_fin;
+		LocalTime hora_inicio;
+		LocalTime hora_fin;
+		LocalTime intervalo;
+		boolean habilitado;
+		
+		try (Connection con = conectar();
+				Statement stm = con.createStatement();
+				ResultSet rs = stm.executeQuery(query);){
+			
+			
+			while(rs.next()) {
+			
+				dia_inicio = rs.getDate(1).toLocalDate();
+				dia_fin = rs.getDate(2).toLocalDate();
+				hora_inicio = rs.getTime(3).toLocalTime();
+				hora_fin  = rs.getTime(4).toLocalTime();
+				intervalo = rs.getTime(5).toLocalTime();
+				habilitado = rs.getBoolean(6);
+				
+				
+				resultado= new Periodo(idPeriodo,dia_inicio,dia_fin,hora_inicio,hora_fin,intervalo,habilitado,curso);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return resultado;
+	}
 	
 }
 	

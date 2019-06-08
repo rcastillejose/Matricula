@@ -13,7 +13,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
+import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -254,26 +257,54 @@ public class Database {
 		
 	}
 	
-	protected boolean eliminarLin_Fac(int idFactura,int linea) {
-		boolean eliminado=false;
-		String sql = "{CALL  eliminar_linea(?,?)}";
+	protected boolean anularReserva(String email) {
+		boolean anulada=false;
+		String sql = "{CALL anular_reserva(?)}";
 		
-		try (Connection con = conectar(); CallableStatement cst = con.prepareCall(sql);) {
-					int i = 0;
+		try (Connection con = conectar();
+				CallableStatement cst = con.prepareCall(sql);) {
+					//int i = 0;
 
-					cst.setInt(++i, idFactura);
-					cst.setInt(++i, linea);
+					cst.setString(1, email);
 					
 
 					cst.execute();
-					eliminado = true;
+					anulada = true;
 			} catch (SQLException e) {
 					System.out.println(e.getErrorCode());
 					System.out.println(e.getMessage());
 				}
 		
-		return eliminado;
+		return anulada;
 		
+	}
+	
+	protected boolean crearPeriodo(Date diaInicio,Date diaFin,Time horaInicio,Time horaFin, Time intervalo, int cursoYear) {
+		boolean creado = false;
+		String sql = "{CALL crear_periodo(?,?,?,?,?,?)}";
+		System.out.println(sql);
+		
+		try (Connection con = conectar();
+				CallableStatement cst = con.prepareCall(sql);) {
+					//int i = 0;
+
+					cst.setDate(1, diaInicio);
+					cst.setDate(2, diaFin);
+					cst.setTime(3, horaInicio);
+					cst.setTime(4, horaFin);
+					cst.setTime(5, intervalo);
+					cst.setInt(6, cursoYear);
+					
+
+					cst.execute();
+					creado = true;
+			} catch (SQLException e) {
+				e.printStackTrace();
+					System.out.println(e.getErrorCode());
+					JOptionPane.showMessageDialog(null,e.getErrorCode()+ e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				}
+		
+		return creado;
 	}
 	
 

@@ -10,11 +10,11 @@ public class Periodo {
 	private LocalTime hora_inicio;
 	private LocalTime hora_fin;
 	private LocalTime intervalo;
-	private int habilitado;
-	private String cursoYear;
+	private boolean habilitado;
+	private int cursoYear;
 	
 	public Periodo(int idPeriodo, LocalDate dia_inicio, LocalDate dia_fin, LocalTime hora_inicio, LocalTime hora_fin,
-			LocalTime intervalo, int habilitado, String cursoYear) {
+			LocalTime intervalo, boolean habilitado, int cursoYear) {
 		super();
 		this.idPeriodo = idPeriodo;
 		this.dia_inicio = dia_inicio;
@@ -66,19 +66,19 @@ public class Periodo {
 		this.intervalo = intervalo;
 	}
 
-	public int getHabilitado() {
+	public boolean getHabilitado() {
 		return habilitado;
 	}
 
-	public void setHabilitado(int habilitado) {
+	public void setHabilitado(boolean habilitado) {
 		this.habilitado = habilitado;
 	}
 
-	public String getCursoYear() {
+	public int getCursoYear() {
 		return cursoYear;
 	}
 
-	public void setCursoYear(String cursoYear) {
+	public void setCursoYear(int cursoYear) {
 		this.cursoYear = cursoYear;
 	}
 

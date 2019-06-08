@@ -123,12 +123,12 @@ public class ControladorReservas implements CalendarListener, ActionListener, Mo
 		DefaultComboBoxModel dcbm = new DefaultComboBoxModel();
 		dcbm.removeAllElements();
 
-		LinkedHashSet<String> resultado = modelo.obtenerCursos();
+		LinkedHashSet<Integer> resultado = modelo.obtenerCursos();
 		Iterator it = resultado.iterator();
 		while(it.hasNext()) {
 			curso =it.next().toString();
-			aux = curso.substring(0,4);
-			dcbm.addElement(aux);
+			
+			dcbm.addElement(curso);
 		}
 		jfre.cBCurso.setModel(dcbm);
 		System.out.println(dcbm.getSelectedItem());
@@ -137,7 +137,7 @@ public class ControladorReservas implements CalendarListener, ActionListener, Mo
 	
 	private void iniciarCalendario() {
 
-		lista = modelo.obtenerDias(String.valueOf(jfre.cBCurso.getSelectedItem()));
+		lista = modelo.obtenerDias(Integer.parseInt(jfre.cBCurso.getSelectedItem().toString()));
 		jfre.cPDiaReserva.setBorder(new TitledBorder(null, "Dia de Reserva", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		DatePickerSettings dateSettings = new DatePickerSettings();    
 		jfre.cPDiaReserva.setSettings(dateSettings);
