@@ -30,10 +30,6 @@ WHERE  proyectodb.`Reserva`.email = $P{email}]]>
 				</textElement>
 				<text><![CDATA[IES LA VEREDA]]></text>
 			</staticText>
-			<image>
-				<reportElement x="80" y="14" width="50" height="50" uuid="df95cc49-1a20-4b1a-983c-1feeb289f285"/>
-				<imageExpression><![CDATA["/src/img/icolog.png"]]></imageExpression>
-			</image>
 		</band>
 	</title>
 	<pageHeader>

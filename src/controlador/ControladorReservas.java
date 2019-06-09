@@ -88,19 +88,10 @@ public class ControladorReservas implements CalendarListener, ActionListener, Mo
 	private void inicializar() {
 
 		jfre.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		
+		iniciarEtiqueta();
 		actualizarComboboxCursos();
 		iniciarCalendario();
-		int tieneReserva =modelo.comprobarAlumno(a.getEmail());
-		if(tieneReserva>0) {
-			jfre.btnEliminarReserva.setVisible(true);
-			reserva=true;
-			jfre.lbTieneReserva.setText(modelo.obtenerReserva(a.getEmail()));
-		} else {
-			jfre.btnEliminarReserva.setVisible(false);
-			reserva=false;
-			jfre.lbTieneReserva.setVisible(false);
-		}
+		
 		jfre.btnReservar.setVisible(false);
 		jfre.lblBienvenido.setText("Bienvenido "+a.getNombre());
 		
@@ -135,6 +126,22 @@ public class ControladorReservas implements CalendarListener, ActionListener, Mo
 			crearReserva();
 		} else if(command.equals("eliminarReserva")) {
 			eliminarReserva();
+		}
+	}
+	
+	/**
+	 * Poner visible la etiqueta de las etiquetas
+	 */
+	private void iniciarEtiqueta() {
+		int tieneReserva =modelo.comprobarAlumno(a.getEmail());
+		if(tieneReserva>0) {
+			jfre.btnEliminarReserva.setVisible(true);
+			reserva=true;
+			jfre.lbTieneReserva.setText(modelo.obtenerReserva(a.getEmail()));
+		} else {
+			jfre.btnEliminarReserva.setVisible(false);
+			reserva=false;
+			jfre.lbTieneReserva.setVisible(false);
 		}
 	}
 	
@@ -194,6 +201,7 @@ public class ControladorReservas implements CalendarListener, ActionListener, Mo
 	 */
 	private void crearReserva() {
 		boolean cambio=false;
+		boolean crear=false;
 		System.out.println(jfre.tReservas.getValueAt(jfre.tReservas.getSelectedRow(), 1).toString());
 		System.out.println(jfre.tReservas.getValueAt(jfre.tReservas.getSelectedRow(), 2).toString());
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("H:mm");
@@ -206,21 +214,24 @@ public class ControladorReservas implements CalendarListener, ActionListener, Mo
 					"Confirmacion", JOptionPane.YES_NO_OPTION);
 			if (opcion == JOptionPane.YES_OPTION) {
 				cambio=modelo.modificarReserva(a.getEmail(), dia.toLocalDate(), hora);
+				
 			}
 			
 			if(cambio) {
-				inicializar();
+				
 				JOptionPane.showMessageDialog(vista, "Se ha modificado su reserva, revisa tu correo para mas información","Info",JOptionPane.INFORMATION_MESSAGE);
 				mandarCorreo();
+				iniciarEtiqueta();
 			} else {
 				JOptionPane.showMessageDialog(vista, "No se ha podido modificar su reserva","Error",JOptionPane.ERROR_MESSAGE);
 			}
 		} else {
-			cambio=modelo.reservar(a.getEmail(), dia.toLocalDate(), hora);
-			if(cambio) {
-				inicializar();
-				JOptionPane.showMessageDialog(vista, "Se ha creado su reserva, revisa tu correo para mas información","Info",JOptionPane.INFORMATION_MESSAGE);
+			crear=modelo.reservar(a.getEmail(), dia.toLocalDate(), hora);
+			if(crear) {
 				
+				JOptionPane.showMessageDialog(vista, "Se ha creado su reserva, revisa tu correo para mas información","Info",JOptionPane.INFORMATION_MESSAGE);
+				mandarCorreo();
+				iniciarEtiqueta();
 			} else {
 				JOptionPane.showMessageDialog(vista, "No se ha podido crear su reserva","Error",JOptionPane.ERROR_MESSAGE);
 			}
