@@ -475,8 +475,8 @@ public class JFAdministrador extends JFrame {
 					.addGap(27)
 					.addComponent(lblCuerpoDelMensaje)
 					.addGap(18)
-					.addComponent(tPBody, GroupLayout.PREFERRED_SIZE, 271, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 152, Short.MAX_VALUE)
+					.addComponent(tPBody, GroupLayout.DEFAULT_SIZE, 405, Short.MAX_VALUE)
+					.addGap(18)
 					.addComponent(panel_8, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap())
 		);

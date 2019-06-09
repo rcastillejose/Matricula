@@ -75,6 +75,10 @@ public class Modelo extends Database {
 		}
 	}
 	
+	/**
+	 * Metodo para obtener una lista con los cursos disponibles
+	 * @return lista de cursos disponibles
+	 */
 	public LinkedHashSet<Integer> obtenerCursos(){
 		LinkedHashSet<Integer> resultado = new LinkedHashSet<Integer>();
 		
@@ -100,6 +104,11 @@ public class Modelo extends Database {
 	}
 	
 	
+	/**
+	 * Método para obtener los dias de reserva de un curso
+	 * @param curso para el que se va a realizar la reserva
+	 * @return lista con los dias
+	 */
 	public HashSet<LocalDate> obtenerDias(int curso) {
 		HashSet<LocalDate> resultado = new HashSet<LocalDate>();
 		String query = "select r.reserva_dia from Reserva r join Periodo p on(r.idPeriodo=r.idPeriodo) " + 
@@ -122,7 +131,11 @@ public class Modelo extends Database {
 		return resultado;
 	}
 	
-	
+	/**
+	 * Metodo para obtener las reservas de un día
+	 * @param dia del que se quieren mostrar las reservas
+	 * @return mapa con los dias y las horas de las reservas disponibles
+	 */
 	public Map<Integer,Reserva> obtenerReservas(Date dia){
 		Map<Integer,Reserva> resultadoSalida = new LinkedHashMap<Integer,Reserva>();
 		Map<Integer,ArrayList<Object>> resultadoBD=new LinkedHashMap<Integer,ArrayList<Object>>();
@@ -146,6 +159,11 @@ public class Modelo extends Database {
 		return resultadoSalida;
 	}
 	
+	/**
+	 * Método que comprueba si un alumno tiene alguna reserva ya
+	 * @param email del alumno
+	 * @return número de reservas que ha realizado el alumno
+	 */
 	public int comprobarAlumno(String  email) {
 		String sql = "SELECT COUNT(*) FROM Reserva WHERE email= '"+email+"'"; 
 		try(Connection con = conectar(); 
@@ -162,11 +180,25 @@ public class Modelo extends Database {
 		}
 	}
 	
+	/**
+	 * Metodo para realizar la inserción de una reserva de un alumno
+	 * @param email del alumno 
+	 * @param dia de la reserva
+	 * @param hora de la reserva
+	 * @return true si se ha realizado la reserva
+	 */
 	public boolean reservar(String email, LocalDate dia, LocalTime hora) {
 		return update("email="+"'"+email+"'","Reserva","reserva_dia='"+dia+"' AND reserva_hora='"+hora+"'");
 		
 	}
 	
+	/**
+	 * Método que se encarga de realizar una reserva
+	 * @param email del alumno
+	 * @param dia de la reserva nueva
+	 * @param hora de la reserva nueva
+	 * @return true si se ha podido modificar la reserva
+	 */
 	public boolean modificarReserva(String email, LocalDate dia, LocalTime hora) {
 		boolean actualizado =false;
 		actualizado=update("email=NULL","Reserva","email='"+email+"'");
@@ -177,10 +209,19 @@ public class Modelo extends Database {
 
 	}
 	
+	/**
+	 * Elimina la reserva de un alumno
+	 * @param email del alumno
+	 * @return true si se ha podido eliminar
+	 */
 	public boolean eliminarReserva(String email) {
 		return anularReserva(email);
 	}
 	
+	/**
+	 * Método para obtener el mensaje de correo que se va a enviar al alumno
+	 * @return String con el mensaje
+	 */
 	public String obtenerMensajeCorreo() {
 		String sql = "SELECT Cuerpo FROM Mensaje WHERE tipoMensaje='correo'"; 
 		try(Connection con = conectar(); 
@@ -197,11 +238,21 @@ public class Modelo extends Database {
 		}
 	}
 	
+	/**
+	 * Método para insertar un alumno nuevo en el registro
+	 * @param a
+	 * @param passwd
+	 * @return
+	 */
 	public boolean insertarAlumno(Alumno a,String passwd) {
 		return insert("nombre,apellidos,email,login,passwd","Alumno","'"+a.getNombre()+"','"+a.getApellidos()+"','"+a.getEmail()+"','"+a.getLogin()+"',PASSWORD('"+passwd+"')");
 		
 	}
-	
+	/**
+	 * Metodo para obtener la reserva de un alumno
+	 * @param email del alumno
+	 * @return String con el dia y la hora de la reserva
+	 */
 	public String obtenerReserva(String email) {
 		String sql = "SELECT reserva_dia,reserva_hora FROM Reserva WHERE email='"+email+"'"; 
 		LocalDate reserva_dia;
@@ -226,17 +277,39 @@ public class Modelo extends Database {
 		}
 	}
 	
-	//****************************************************************PARA ADMINISTRADOR********************************
+	// *******************************************************************************************
+	// ************************************PARA ADMINISTRADOR*************************************
+	// *******************************************************************************************
 	
+	/**
+	 * Insertar un curso nuevo
+	 * @param curso que se insertará
+	 * @return true si se ha podido insertar
+	 */
 	public boolean insertarCurso(int curso) {
 		return insert("cursoYear","Curso",String.valueOf(curso));
 		
 	}
 	
+	/**
+	 * Método que añade un nuevo periodo
+	 * @param diaInicio del periodo
+	 * @param diaFin del periodo
+	 * @param horaInicio del periodo
+	 * @param horaFin del periodo
+	 * @param intervalo del periodo
+	 * @param cursoYear del periodo
+	 * @return true si se ha podido insertar
+	 */
 	public boolean addPeriodo(Date diaInicio,Date diaFin,Time horaInicio,Time horaFin, Time intervalo, int cursoYear) {
 		return crearPeriodo(diaInicio,diaFin,horaInicio,horaFin,intervalo,cursoYear);
 	}
 	
+	/**
+	 * Devuelve un map ordenado con los periodos de un curso
+	 * @param curso del que se obtendran los periodos
+	 * @return Map con los periodos
+	 */
 	public Map<Integer,Periodo> obtenerPeriodos(int curso){
 		
 		Map<Integer,Periodo> resultadoSalida = new LinkedHashMap<Integer,Periodo>();
@@ -250,8 +323,6 @@ public class Modelo extends Database {
 		LocalTime hora_fin;
 		LocalTime intervalo;
 		boolean habilitado;
-		
-	
 		
 		for(Integer key : resultadoBD.keySet()) {
 			
@@ -269,6 +340,11 @@ public class Modelo extends Database {
 		return resultadoSalida;
 	}
 	 
+	/**
+	 * Obtiene un periodo por un idPeriodo
+	 * @param idPeriodo del que se quiere obtener
+	 * @return Periodo que devuelve la base de datos
+	 */
 	public Periodo obtenerPeriodo(int idPeriodo) {
 		Periodo resultado=null;
 		String query = "SELECT idPeriodo,dia_inicio,dia_fin,hora_inicio,hora_fin,intervalo,habilitado,cursoYear FROM Periodo WHERE idPeriodo = "+idPeriodo;
@@ -308,6 +384,18 @@ public class Modelo extends Database {
 		return resultado;
 	}
 	
+	/**
+	 * Metodo que modifica un periodo
+	 * @param idPeriodo
+	 * @param dia_inicio
+	 * @param dia_fin
+	 * @param hora_inicio
+	 * @param hora_fin
+	 * @param intervalo
+	 * @param habilitado
+	 * @param cursoYear
+	 * @return true si se ha podido modificar el periodo
+	 */
 	public boolean modPeriodo(int idPeriodo,Date dia_inicio,Date dia_fin,Time hora_inicio,Time hora_fin,Time intervalo,Boolean habilitado,int cursoYear) {
 		
 		return update("dia_inicio='"+dia_inicio+"',dia_fin='"+dia_fin+"',hora_inicio='"+hora_inicio+"',hora_fin='"+hora_fin+
@@ -315,10 +403,13 @@ public class Modelo extends Database {
 		
 	}
 	
+	/**
+	 * Método para obtener las reservas de un periodo
+	 * @param idPeriodo del que se quieren obtener las reservas
+	 * @return Map con las reservas del periodo
+	 */
 	public Map<Integer,Reserva> obtenerReservasPeriodo(int idPeriodo){
-//		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
-		
+	
 		Map<Integer,Reserva> resultadoSalida = new LinkedHashMap<Integer,Reserva>();
 		Map<Integer,ArrayList<Object>> resultadoBD=new LinkedHashMap<Integer,ArrayList<Object>>();
 		
@@ -342,7 +433,11 @@ public class Modelo extends Database {
 		return resultadoSalida;
 	}
 	
-	
+	/**
+	 * Método que actualiza el mensaje que se les enviará a los alumnos
+	 * @param mensaje 
+	 * @return true si se ha podido actualizar
+	 */
 	public boolean updateMensaje(String mensaje) {
 		return update("Cuerpo='"+mensaje+"'","Mensaje","tipoMensaje='correo'");
 	}

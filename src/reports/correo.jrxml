@@ -8,7 +8,7 @@
 		<![CDATA[SELECT  proyectodb.`Reserva`.reserva_dia  ,
 proyectodb.`Reserva`.reserva_hora
 FROM  proyectodb.`Reserva` 
-WHERE  proyectodb.`Reserva`.email = $P{email} ]]>
+WHERE  proyectodb.`Reserva`.email = $P{email}]]>
 	</queryString>
 	<field name="reserva_dia" class="java.sql.Date">
 		<property name="com.jaspersoft.studio.field.label" value="reserva_dia"/>
@@ -24,33 +24,45 @@ WHERE  proyectodb.`Reserva`.email = $P{email} ]]>
 	<title>
 		<band height="79" splitType="Stretch">
 			<staticText>
-				<reportElement x="181" y="16" width="318" height="34" uuid="97cc2ec3-d5b9-42b1-8eb9-928f7cc0b9de"/>
-				<text><![CDATA[SU RESERVA SE HA REALIZADO CORRECTAMENTE]]></text>
+				<reportElement x="200" y="20" width="169" height="34" uuid="97cc2ec3-d5b9-42b1-8eb9-928f7cc0b9de"/>
+				<textElement>
+					<font size="20"/>
+				</textElement>
+				<text><![CDATA[IES LA VEREDA]]></text>
 			</staticText>
+			<image>
+				<reportElement x="80" y="14" width="50" height="50" uuid="df95cc49-1a20-4b1a-983c-1feeb289f285"/>
+				<imageExpression><![CDATA["/src/img/icolog.png"]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageHeader>
-		<band height="35" splitType="Stretch"/>
+		<band height="83" splitType="Stretch">
+			<staticText>
+				<reportElement x="30" y="61" width="481" height="21" uuid="3aa0ddd3-e6ec-4d26-912c-265842d03b42"/>
+				<text><![CDATA[La reserva se ha realizado correctamente, a continuación los datos de la reserva:]]></text>
+			</staticText>
+		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="61" splitType="Stretch"/>
+		<band height="13" splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="21" splitType="Stretch">
+		<band height="32" splitType="Stretch">
 			<textField>
-				<reportElement x="130" y="0" width="101" height="21" uuid="2b2cba92-e1ba-4b90-9803-1c40018d1816"/>
-				<textFieldExpression><![CDATA[$F{reserva_dia}]]></textFieldExpression>
+				<reportElement x="150" y="0" width="100" height="21" uuid="2b2cba92-e1ba-4b90-9803-1c40018d1816"/>
+				<textFieldExpression><![CDATA[$F{reserva_dia}.toLocalDate()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="260" y="0" width="121" height="21" uuid="4d6adeba-ffa4-424c-821e-5ebb156541c7"/>
-				<textFieldExpression><![CDATA[$F{reserva_hora}]]></textFieldExpression>
+				<reportElement x="279" y="0" width="160" height="21" uuid="4d6adeba-ffa4-424c-821e-5ebb156541c7"/>
+				<textFieldExpression><![CDATA[$F{reserva_hora}.toLocalTime()]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="30" y="0" width="100" height="21" uuid="f2fb1077-fbdb-4e9b-9315-b8e863a705b7"/>
 				<text><![CDATA[Su reserva es el día]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="231" y="0" width="29" height="21" uuid="7ed03e67-efb1-4396-b2db-ae8fdae1d0f0"/>
+				<reportElement x="250" y="0" width="29" height="21" uuid="7ed03e67-efb1-4396-b2db-ae8fdae1d0f0"/>
 				<text><![CDATA[a las]]></text>
 			</staticText>
 		</band>
