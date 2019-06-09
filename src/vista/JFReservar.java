@@ -49,6 +49,7 @@ public class JFReservar extends JFrame {
 	 * Create the frame.
 	 */
 	public JFReservar() {
+		setResizable(false);
 		setTitle("Realiza y gestiona tu reserva");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(JFReservar.class.getResource("/img/icolog.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -185,12 +185,11 @@ public class ControladorReservas implements CalendarListener, ActionListener, Mo
 		Date dia = Date.valueOf(jfre.cPDiaReserva.getSelectedDate());
 		Map<Integer,Reserva> resultado = modelo.obtenerReservas(dia);
 			DefaultTableModel dtm = new DefaultTableModel(new Object[][] {},
-					new String[] { "Reserva","Dia de la reserva", "Hora de Inicio", "Periodo"});
+					new String[] { "Día de la reserva", "Hora de Inicio"});
 
 			for (Integer key : resultado.keySet()) {
 
-				dtm.addRow(new Object[] { key, resultado.get(key).getReserva_dia(), resultado.get(key).getReserva_hora(),
-						resultado.get(key).getIdPeriodo() });
+				dtm.addRow(new Object[] {resultado.get(key).getReserva_dia(), resultado.get(key).getReserva_hora()});
 			}
 			jfre.tReservas.setModel(dtm);
 		
