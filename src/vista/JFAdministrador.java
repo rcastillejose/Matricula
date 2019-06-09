@@ -38,6 +38,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.border.LineBorder;
 import javax.swing.JComboBox;
+import java.awt.Toolkit;
 
 public class JFAdministrador extends JFrame {
 
@@ -47,7 +48,7 @@ public class JFAdministrador extends JFrame {
 	public TimePicker tPHoraIni;
 	public JSpinner spReservasMinutos;
 	public JButton btnModificar;
-	public JButton btnEliminar;
+	public JButton btnMostrarReservas;
 	public JTextPane tPBody;
 	public JButton btnRealizarCambios;
 	public DatePicker dPDiaInicio;
@@ -62,11 +63,13 @@ public class JFAdministrador extends JFrame {
 	public TimePicker tPHoraFin;
 	public JCheckBox checkHabilitado;
 	public JComboBox cBCursosMod;
+	public JLabel lbModCurso;
 
 	/**
 	 * Create the frame.
 	 */
 	public JFAdministrador() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(JFAdministrador.class.getResource("/img/icolog.png")));
 		
 		setTitle("Panel para el administrador");
 		setResizable(false);
@@ -290,6 +293,8 @@ public class JFAdministrador extends JFrame {
 		JLabel lblCurso = new JLabel("Curso");
 		
 		cBCursosMod = new JComboBox();
+		
+		lbModCurso = new JLabel("También puedes cambiar el curso");
 		GroupLayout gl_modificarPeriodo = new GroupLayout(modificarPeriodo);
 		gl_modificarPeriodo.setHorizontalGroup(
 			gl_modificarPeriodo.createParallelGroup(Alignment.TRAILING)
@@ -302,12 +307,14 @@ public class JFAdministrador extends JFrame {
 					.addComponent(panel_7, GroupLayout.PREFERRED_SIZE, 283, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap(335, Short.MAX_VALUE))
 				.addGroup(gl_modificarPeriodo.createSequentialGroup()
-					.addContainerGap(58, Short.MAX_VALUE)
+					.addContainerGap(39, Short.MAX_VALUE)
 					.addGroup(gl_modificarPeriodo.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_modificarPeriodo.createSequentialGroup()
 							.addComponent(lblCurso)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(cBCursosMod, GroupLayout.PREFERRED_SIZE, 93, GroupLayout.PREFERRED_SIZE))
+							.addComponent(cBCursosMod, GroupLayout.PREFERRED_SIZE, 93, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(lbModCurso))
 						.addGroup(gl_modificarPeriodo.createSequentialGroup()
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(panel_6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -323,7 +330,8 @@ public class JFAdministrador extends JFrame {
 					.addGap(7)
 					.addGroup(gl_modificarPeriodo.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblCurso)
-						.addComponent(cBCursosMod, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(cBCursosMod, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lbModCurso))
 					.addGap(18)
 					.addGroup(gl_modificarPeriodo.createParallelGroup(Alignment.LEADING)
 						.addComponent(panel, GroupLayout.PREFERRED_SIZE, 370, GroupLayout.PREFERRED_SIZE)
@@ -418,8 +426,8 @@ public class JFAdministrador extends JFrame {
 		btnModificar = new JButton("Modificar");
 		panel_7.add(btnModificar);
 		
-		btnEliminar = new JButton("Eliminar");
-		panel_7.add(btnEliminar);
+		btnMostrarReservas = new JButton("Mostrar Reservas");
+		panel_7.add(btnMostrarReservas);
 		panel_6.setLayout(new BorderLayout(0, 0));
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -435,7 +443,7 @@ public class JFAdministrador extends JFrame {
 		JLabel lblModificarCorreos = new JLabel("MODIFICAR CORREOS");
 		lblModificarCorreos.setFont(new Font("Dialog", Font.BOLD, 21));
 		
-		JLabel lblCuerpoDelMensaje = new JLabel("Cuerpo del mensaje");
+		JLabel lblCuerpoDelMensaje = new JLabel("Cuerpo del mensaje (Se permite la utilización de etiquetas HTML)");
 		
 		tPBody = new JTextPane();
 		

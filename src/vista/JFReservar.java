@@ -29,6 +29,7 @@ import javax.swing.JTable;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import java.awt.FlowLayout;
+import java.awt.Toolkit;
 
 public class JFReservar extends JFrame {
 
@@ -41,12 +42,15 @@ public class JFReservar extends JFrame {
 	public Alumno a;
 	public JButton btnEliminarReserva;
 	public JLabel lblBienvenido;
+	public JLabel lbTieneReserva;
 
 
 	/**
 	 * Create the frame.
 	 */
 	public JFReservar() {
+		setTitle("Realiza y gestiona tu reserva");
+		setIconImage(Toolkit.getDefaultToolkit().getImage(JFReservar.class.getResource("/img/icolog.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 925, 599);
 		contentPane = new JPanel();
@@ -67,13 +71,17 @@ public class JFReservar extends JFrame {
 		
 		lblBienvenido = new JLabel("Bienvenido");
 		
+		lbTieneReserva = new JLabel("New label");
+		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(lblBienvenido)
-					.addPreferredGap(ComponentPlacement.RELATED, 278, Short.MAX_VALUE)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblBienvenido)
+						.addComponent(lbTieneReserva))
+					.addPreferredGap(ComponentPlacement.RELATED, 276, Short.MAX_VALUE)
 					.addComponent(lblHazTuReserva)
 					.addGap(352))
 				.addGroup(gl_contentPane.createSequentialGroup()
@@ -81,12 +89,12 @@ public class JFReservar extends JFrame {
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
 						.addComponent(panel_2, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addComponent(cPDiaReserva, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-					.addPreferredGap(ComponentPlacement.RELATED, 84, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED, 103, Short.MAX_VALUE)
 					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 354, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(50, Short.MAX_VALUE))
+					.addContainerGap(70, Short.MAX_VALUE))
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGap(511)
-					.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 392, Short.MAX_VALUE)
 					.addContainerGap())
 		);
 		gl_contentPane.setVerticalGroup(
@@ -96,8 +104,11 @@ public class JFReservar extends JFrame {
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addContainerGap()
 							.addComponent(lblHazTuReserva))
-						.addComponent(lblBienvenido))
-					.addGap(39)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(lblBienvenido)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(lbTieneReserva)))
+					.addGap(34)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
@@ -115,7 +126,7 @@ public class JFReservar extends JFrame {
 		
 		cBCurso = new JComboBox();
 		panel_2.add(cBCurso);
-		panel_1.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		panel_1.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 		
 		btnEliminarReserva = new JButton("Eliminar reserva");
 		panel_1.add(btnEliminarReserva);

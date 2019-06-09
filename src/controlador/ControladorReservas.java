@@ -45,7 +45,12 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import vista.JFLogin;
 import vista.JFReservar;
-
+/**
+ * Clase que se encargará de controlar la inserción de reservas de los usuarios 
+ * creado el 9 jun. 2019
+ * @author raul
+ *
+ */
 public class ControladorReservas implements CalendarListener, ActionListener, MouseListener, WindowListener {
 	private JFReservar jfre ;
 	private Modelo modelo;
@@ -56,6 +61,13 @@ public class ControladorReservas implements CalendarListener, ActionListener, Mo
 	
 	boolean reserva;
 	
+	/**
+	 * Constructor de la clase
+	 * @param vista Frame del login
+	 * @param jfre Frame sobre el que se realizan las reservas
+	 * @param modelo Modelo que realizara las acciones sobre la base de datos
+	 * @param a alumno que realizará las reservas
+	 */
 	public ControladorReservas(JFLogin vista, JFReservar jfre, Modelo modelo, Alumno a) {
 		this.jfre = jfre;
 		this.modelo = modelo;
@@ -64,10 +76,15 @@ public class ControladorReservas implements CalendarListener, ActionListener, Mo
 		inicializar();
 	}
 	
+	/**
+	 * Hace el frame visible
+	 */
 	public void go() {
 		jfre.setVisible(true);
 	}
-	
+	/**
+	 * Pone a escuchar las acciones sobre el frame de registroy otras acciones en base al inicio del frame
+	 */
 	private void inicializar() {
 
 		jfre.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -78,9 +95,11 @@ public class ControladorReservas implements CalendarListener, ActionListener, Mo
 		if(tieneReserva>0) {
 			jfre.btnEliminarReserva.setVisible(true);
 			reserva=true;
+			jfre.lbTieneReserva.setText(modelo.obtenerReserva(a.getEmail()));
 		} else {
 			jfre.btnEliminarReserva.setVisible(false);
 			reserva=false;
+			jfre.lbTieneReserva.setVisible(false);
 		}
 		jfre.btnReservar.setVisible(false);
 		jfre.lblBienvenido.setText("Bienvenido "+a.getNombre());
@@ -102,7 +121,9 @@ public class ControladorReservas implements CalendarListener, ActionListener, Mo
 		
 		jfre.addWindowListener(this);
 	}
-	
+	/**
+	 * Indica las consecuencias de las acciones que se realizan sobre el frame 
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
@@ -117,6 +138,9 @@ public class ControladorReservas implements CalendarListener, ActionListener, Mo
 		}
 	}
 	
+	/**
+	 * Actualiza el combobox del frame para que aparezcan en el todos los cursos
+	 */
 	private void actualizarComboboxCursos() {
 		String curso;
 		String aux;
@@ -134,7 +158,9 @@ public class ControladorReservas implements CalendarListener, ActionListener, Mo
 		System.out.println(dcbm.getSelectedItem());
 	}
 	
-	
+	/**
+	 * Inicia el calendario del frame utilizando las propiedades asignadas
+	 */
 	private void iniciarCalendario() {
 
 		lista = modelo.obtenerDias(Integer.parseInt(jfre.cBCurso.getSelectedItem().toString()));
@@ -145,6 +171,9 @@ public class ControladorReservas implements CalendarListener, ActionListener, Mo
 	    
 	}
 	
+	/**
+	 * Carga las reservas del día que haya sido seleccionado en la tabla
+	 */
 	private void cargarReservas() {
 		Date dia = Date.valueOf(jfre.cPDiaReserva.getSelectedDate());
 		Map<Integer,Reserva> resultado = modelo.obtenerReservas(dia);
@@ -160,6 +189,9 @@ public class ControladorReservas implements CalendarListener, ActionListener, Mo
 		
 	}
 	
+	/**
+	 * Asigna la reserva seleccionada al alumno que ha accedido a la aplicacion, o modifica la reserva si este ya tenia una
+	 */
 	private void crearReserva() {
 		boolean cambio=false;
 		System.out.println(jfre.tReservas.getValueAt(jfre.tReservas.getSelectedRow(), 1).toString());
@@ -195,7 +227,9 @@ public class ControladorReservas implements CalendarListener, ActionListener, Mo
 		}
 	}
 	
-	
+	/**
+	 * Elimina la reserva que tenga el usuario
+	 */
 	private void eliminarReserva() {
 		int opcion = JOptionPane.showConfirmDialog(vista, "Desea eliminar su reserva","Info",JOptionPane.INFORMATION_MESSAGE);
 		if(opcion==JOptionPane.YES_OPTION) {
@@ -204,6 +238,9 @@ public class ControladorReservas implements CalendarListener, ActionListener, Mo
 		} 
 	}
 	
+	/**
+	 * envia un correo al alumno cuando se realice la reserva
+	 */
 	public void mandarCorreo() {
 		String cuerpo = modelo.obtenerMensajeCorreo();
 		String to = a.getEmail();

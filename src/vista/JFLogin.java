@@ -28,6 +28,7 @@ public class JFLogin extends JFrame {
 	public JButton btnCancelar;
 	public JButton btnRegistro;
 	public JPasswordField pFpasswd;
+	public JButton btAbout;
 
 	/**
 	 * Launch the application.
@@ -49,6 +50,7 @@ public class JFLogin extends JFrame {
 	 * Create the frame.
 	 */
 	public JFLogin() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(JFLogin.class.getResource("/img/icolog.png")));
 		setResizable(false);
 	
 		
@@ -65,16 +67,21 @@ public class JFLogin extends JFrame {
 		JPanel panel = new JPanel();
 		
 		btnCancelar = new JButton("Salir");
+		
+		btAbout = new JButton("About");
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(panelSuperior, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
-						.addComponent(panelLog, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 466, GroupLayout.PREFERRED_SIZE)
-						.addComponent(panel, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 466, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnCancelar, Alignment.TRAILING))
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+						.addComponent(panelSuperior, GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
+						.addComponent(panelLog, GroupLayout.PREFERRED_SIZE, 466, GroupLayout.PREFERRED_SIZE)
+						.addComponent(panel, GroupLayout.PREFERRED_SIZE, 466, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(btAbout)
+							.addPreferredGap(ComponentPlacement.RELATED, 285, Short.MAX_VALUE)
+							.addComponent(btnCancelar)))
 					.addContainerGap())
 		);
 		gl_contentPane.setVerticalGroup(
@@ -85,8 +92,10 @@ public class JFLogin extends JFrame {
 					.addComponent(panelLog, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(btnCancelar)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btnCancelar)
+						.addComponent(btAbout))
 					.addGap(18))
 		);
 		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));

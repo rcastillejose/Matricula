@@ -14,6 +14,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
+import java.awt.Toolkit;
 
 public class JFRegistro extends JFrame {
 
@@ -30,6 +31,8 @@ public class JFRegistro extends JFrame {
 	 * Create the frame.
 	 */
 	public JFRegistro() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(JFRegistro.class.getResource("/img/icolog.png")));
+		setTitle("Panel de registro");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 706, 412);

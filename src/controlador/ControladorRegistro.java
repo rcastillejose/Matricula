@@ -14,12 +14,24 @@ import modelo.Password;
 import vista.JFLogin;
 import vista.JFRegistro;
 
+/**
+ * Es la clase que se encargará de gestionar los registros de los usuarios
+ * creado el 9 jun. 2019
+ * @author raul
+ *
+ */
 public class ControladorRegistro implements ActionListener,WindowListener {
 
 	private JFLogin vista;
 	private Modelo modelo;
 	private JFRegistro jfreg;
 	
+	/**
+	 * Constructor de la clase
+	 * @param vista es el Frame del login
+	 * @param modelo el encargado de realizar las conexiones con la base de datos
+	 * @param jfreg el frame de registro de los usuarios
+	 */
 	public ControladorRegistro(JFLogin vista,Modelo modelo, JFRegistro jfreg) {
 		super();
 		this.vista=vista;
@@ -28,10 +40,16 @@ public class ControladorRegistro implements ActionListener,WindowListener {
 		iniciar();
 	}
 	
+	/**
+	 * Inicia el frame de registro
+	 */
 	public void go() {
 		jfreg.setVisible(true);
 	}
 	
+	/**
+	 * Pone a escuchar las acciones sobre el frame de registro
+	 */
 	public void iniciar() {
 		jfreg.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		
@@ -42,6 +60,9 @@ public class ControladorRegistro implements ActionListener,WindowListener {
 		jfreg.addWindowListener(this);
 	}
 
+	/**
+	 * Indica las consecuencias de las acciones que se realizan sobre el frame
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
@@ -51,7 +72,9 @@ public class ControladorRegistro implements ActionListener,WindowListener {
 			registrar();
 		}
 	}
-	
+	/**
+	 * Indica la acción cuando se cierra la ventana
+	 */
 	@Override
 	public void windowClosing(WindowEvent e) {
 		// TODO Auto-generated method stub
@@ -59,6 +82,9 @@ public class ControladorRegistro implements ActionListener,WindowListener {
 		jfreg.dispose();
 	}
 	
+	/**
+	 * Se recoge la información de los campos y se realiza una inserción del nuevo alumno, enviando la información de acceso por correo
+	 */
 	public void registrar() {
 		String nombre;
 		String apellidos;
@@ -93,6 +119,10 @@ public class ControladorRegistro implements ActionListener,WindowListener {
 		
 	}
 	
+	/**
+	 * comprueba si los campos del Frame están vacios
+	 * @return true si hay algún campo vacío
+	 */
 	public boolean camposVacios() {
 		boolean vacio;
 		int nombre = (jfreg.tFNombre.getText().length());

@@ -62,7 +62,12 @@ public class Modelo extends Database {
 			
 			a = new Alumno(email,nombre,apellidos,loginA);
 			System.out.println(a);
-			return a;
+			if (a.getEmail()!=null) {
+				return a;
+			} else
+				return null;
+			
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -119,9 +124,6 @@ public class Modelo extends Database {
 	
 	
 	public Map<Integer,Reserva> obtenerReservas(Date dia){
-//		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
-		
 		Map<Integer,Reserva> resultadoSalida = new LinkedHashMap<Integer,Reserva>();
 		Map<Integer,ArrayList<Object>> resultadoBD=new LinkedHashMap<Integer,ArrayList<Object>>();
 		
@@ -196,9 +198,32 @@ public class Modelo extends Database {
 	}
 	
 	public boolean insertarAlumno(Alumno a,String passwd) {
-		
 		return insert("nombre,apellidos,email,login,passwd","Alumno","'"+a.getNombre()+"','"+a.getApellidos()+"','"+a.getEmail()+"','"+a.getLogin()+"',PASSWORD('"+passwd+"')");
 		
+	}
+	
+	public String obtenerReserva(String email) {
+		String sql = "SELECT reserva_dia,reserva_hora FROM Reserva WHERE email='"+email+"'"; 
+		LocalDate reserva_dia;
+		LocalTime reserva_hora;
+		
+		try(Connection con = conectar(); 
+				Statement stm=con.createStatement();
+				ResultSet rs = stm.executeQuery(sql);){
+			
+			rs.next();
+			
+			reserva_dia = LocalDate.parse(String.valueOf(rs.getDate("reserva_dia")));
+			reserva_hora = LocalTime.parse(String.valueOf(rs.getTime("reserva_hora")));
+			
+			
+			return "Tu reserva es el día "+reserva_dia.toString()+" A las "+reserva_hora;
+				
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	//****************************************************************PARA ADMINISTRADOR********************************
@@ -281,6 +306,45 @@ public class Modelo extends Database {
 			}
 		
 		return resultado;
+	}
+	
+	public boolean modPeriodo(int idPeriodo,Date dia_inicio,Date dia_fin,Time hora_inicio,Time hora_fin,Time intervalo,Boolean habilitado,int cursoYear) {
+		
+		return update("dia_inicio='"+dia_inicio+"',dia_fin='"+dia_fin+"',hora_inicio='"+hora_inicio+"',hora_fin='"+hora_fin+
+				"',intervalo="+intervalo+"',habilitado="+habilitado+",cursoYear="+cursoYear,"Periodo","idPeriodo="+idPeriodo);
+		
+	}
+	
+	public Map<Integer,Reserva> obtenerReservasPeriodo(int idPeriodo){
+//		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
+		
+		Map<Integer,Reserva> resultadoSalida = new LinkedHashMap<Integer,Reserva>();
+		Map<Integer,ArrayList<Object>> resultadoBD=new LinkedHashMap<Integer,ArrayList<Object>>();
+		
+		resultadoBD = select("idReserva,reserva_dia,reserva_hora,idPeriodo,email","Reserva","idPeriodo = "+idPeriodo,"idReserva");
+		
+		LocalDate reserva_dia;
+		LocalTime reserva_hora;
+		String email;
+	
+		
+		for(Integer key : resultadoBD.keySet()) {
+			
+			reserva_dia = LocalDate.parse(String.valueOf(resultadoBD.get(key).get(1)));
+			reserva_hora = LocalTime.parse(String.valueOf(resultadoBD.get(key).get(2)));
+			idPeriodo = Integer.parseInt(String.valueOf(resultadoBD.get(key).get(3)));
+			email = String.valueOf(resultadoBD.get(key).get(4));
+			
+			resultadoSalida.put(key, new Reserva(key,email,reserva_dia,reserva_hora,idPeriodo));
+		}
+		
+		return resultadoSalida;
+	}
+	
+	
+	public boolean updateMensaje(String mensaje) {
+		return update("Cuerpo='"+mensaje+"'","Mensaje","tipoMensaje='correo'");
 	}
 	
 }
